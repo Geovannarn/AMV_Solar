@@ -15,9 +15,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                // -------------------------------------------------------
-                //  Autorização de rotas
-                // -------------------------------------------------------
                 .authorizeHttpRequests(auth -> auth
                         // Recursos estáticos — público
                         .requestMatchers(
@@ -31,40 +28,32 @@ public class SecurityConfig {
                         // Console H2 — apenas desenvolvimento
                         .requestMatchers("/h2-console/**").permitAll()
 
-                        // Páginas públicas do site
-                        .requestMatchers(
-                                "/",
-                                "/index",
-                                "/sobre",
-                                "/servicos",
-                                "/projetos",
-                                "/contato",
-                                "/faq",
-                                "/simulacao",
-                                "/api/leads",      // endpoint do formulário de simulação
-                                "/api/contato"     // endpoint do formulário de contato
-                        ).permitAll()
+                        // Admin exige autenticação
+                        .requestMatchers("/admin/**").authenticated()
 
-                        // Qualquer outra rota exige autenticação (admin futuro)
-                        .anyRequest().authenticated()
+                        // Todo o resto é público
+                        .anyRequest().permitAll()
                 )
 
-                // -------------------------------------------------------
-                //  Proteção CSRF — mantida para formulários HTML
-                //  Ignorada para /api/** (chamadas AJAX do front)
-                // -------------------------------------------------------
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/api/**", "/h2-console/**")
                 )
 
-                // -------------------------------------------------------
-                //  Headers de segurança
-                // -------------------------------------------------------
-                .headers(headers -> headers
-                        // Permite que o console H2 use iframes (dev)
-                        .frameOptions(frame -> frame.sameOrigin())
+                .formLogin(form -> form
+                        .loginPage("/admin/login")
+                        .loginProcessingUrl("/admin/login")
+                        .defaultSuccessUrl("/admin", true)
+                        .permitAll()
+                )
 
-                        // Content Security Policy
+                .logout(logout -> logout
+                        .logoutUrl("/admin/logout")
+                        .logoutSuccessUrl("/")
+                        .permitAll()
+                )
+
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.sameOrigin())
                         .contentSecurityPolicy(csp -> csp
                                 .policyDirectives(
                                         "default-src 'self'; " +
@@ -75,8 +64,6 @@ public class SecurityConfig {
                                                 "connect-src 'self' https://wa.me https://api.whatsapp.com"
                                 )
                         )
-
-                        // Referrer Policy
                         .referrerPolicy(ref -> ref
                                 .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
                         )
