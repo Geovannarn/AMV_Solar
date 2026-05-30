@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AMV Solar — Energia solar fotovoltaica com qualidade e eficiência para sua residência ou empresa." />
+    <title>AMV Solar | Energia que Transforma</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/Style.css}" />
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav id="navbar">
+    <div class="container nav-inner">
+        <a href="#hero" class="nav-logo">AMV<span>☀</span>SOLAR</a>
+
+        <ul class="nav-links">
+            <li><a href="#sobre">Sobre</a></li>
+            <li><a href="#servicos">Serviços</a></li>
+            <li><a href="#projetos">Projetos</a></li>
+            <li><a href="#depoimentos">Depoimentos</a></li>
+            <li><a href="#contato">Contato</a></li>
+        </ul>
+
+        <div class="nav-cta">
+            <a href="#contato" class="btn btn-primary">Solicitar Orçamento</a>
+            <!-- Admin link (só aparece para usuários autenticados) -->
+            <a sec:authorize="isAuthenticated()" th:href="@{/admin}" class="btn btn-outline">Admin</a>
+        </div>
+
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <a href="#sobre"        onclick="closeMobile()">Sobre</a>
+    <a href="#servicos"     onclick="closeMobile()">Serviços</a>
+    <a href="#projetos"     onclick="closeMobile()">Projetos</a>
+    <a href="#depoimentos"  onclick="closeMobile()">Depoimentos</a>
+    <a href="#contato"      onclick="closeMobile()">Contato</a>
+    <a href="#contato" class="btn btn-primary" onclick="closeMobile()">Solicitar Orçamento</a>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-orb"></div>
+
+    <div class="container">
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                <span class="dot"></span>
+                Energia Solar Fotovoltaica
+            </div>
+
+            <h1 class="hero-title">
+                ENERGIA QUE
+                <span class="accent">TRANSFORMA</span>
+                SUA VIDA
+            </h1>
+
+            <p class="hero-desc">
+                Reduza até 95% na sua conta de luz com sistemas fotovoltaicos de alta
+                performance. Instalação profissional, garantia completa e retorno
+                garantido do seu investimento.
+            </p>
+
+            <div class="hero-actions">
+                <a href="#contato" class="btn btn-primary">
+                    ☀ Quero meu orçamento grátis
+                </a>
+                <a href="#projetos" class="btn btn-outline">
+                    Ver projetos realizados
+                </a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">95<span style="font-size:1.2rem">%</span></div>
+                    <div class="stat-label">Redução na conta</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">25<span style="font-size:1.2rem">+</span></div>
+                    <div class="stat-label">Anos de garantia</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100<span style="font-size:1.2rem">%</span></div>
+                    <div class="stat-label">Satisfação dos clientes</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===================== SOBRE ===================== -->
+<section id="sobre">
+    <div class="container">
+        <div class="sobre-grid">
+
+            <div class="sobre-visual reveal">
+                <div class="sobre-img-wrap">
+                    <span class="sobre-icon-big">⚡</span>
+                </div>
+                <div class="sobre-badge-float">
+                    <strong>+5</strong>
+                    Anos no mercado solar
+                </div>
+            </div>
+
+            <div class="sobre-text reveal">
+                <span class="section-tag">☀ Sobre a AMV Solar</span>
+                <h2 class="section-title">
+                    Especialistas em<br /><span>energia renovável</span>
+                </h2>
+                <p class="section-sub">
+                    A AMV Solar nasceu com o propósito de democratizar o acesso à energia
+                    solar, oferecendo soluções completas para residências, comércios e
+                    indústrias com a mais alta qualidade do mercado.
+                </p>
+
+                <div class="sobre-items">
+                    <div class="sobre-item">
+                        <div class="sobre-item-icon">🏆</div>
+                        <div class="sobre-item-text">
+                            <strong>Equipe Certificada</strong>
+                            <span>Profissionais treinados e certificados pelas melhores marcas do setor fotovoltaico.</span>
+                        </div>
+                    </div>
+                    <div class="sobre-item">
+                        <div class="sobre-item-icon">🔧</div>
+                        <div class="sobre-item-text">
+                            <strong>Suporte Completo</strong>
+                            <span>Do projeto à instalação, com acompanhamento pós-venda e manutenção preventiva.</span>
+                        </div>
+                    </div>
+                    <div class="sobre-item">
+                        <div class="sobre-item-icon">📋</div>
+                        <div class="sobre-item-text">
+                            <strong>Homologação Garantida</strong>
+                            <span>Realizamos todo o processo de aprovação junto à distribuidora de energia.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#contato" class="btn btn-primary" style="margin-top:36px">
+                    Fale com um especialista
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===================== SERVIÇOS ===================== -->
+<section id="servicos">
+    <div class="container">
+        <div class="servicos-header reveal">
+            <span class="section-tag">⚡ O que fazemos</span>
+            <h2 class="section-title">Nossas <span>soluções</span></h2>
+            <p class="section-sub">Oferecemos um portfólio completo de serviços para que você aproveite ao máximo a energia do sol.</p>
+        </div>
+
+        <div class="servicos-grid">
+
+            <div class="servico-card reveal">
+                <div class="servico-icon">🏠</div>
+                <h3>Residencial</h3>
+                <p>Sistemas fotovoltaicos dimensionados para sua casa, com economia imediata na conta de luz e valorização do imóvel.</p>
+            </div>
+
+            <div class="servico-card reveal">
+                <div class="servico-icon">🏢</div>
+                <h3>Comercial</h3>
+                <p>Soluções para comércios e empresas que buscam reduzir custos operacionais e mostrar compromisso com a sustentabilidade.</p>
+            </div>
+
+            <div class="servico-card reveal">
+                <div class="servico-icon">🏭</div>
+                <h3>Industrial</h3>
+                <p>Projetos de grande porte com alto retorno sobre investimento para indústrias e galpões de elevado consumo energético.</p>
+            </div>
+
+            <div class="servico-card reveal">
+                <div class="servico-icon">🔋</div>
+                <h3>Armazenamento</h3>
+                <p>Baterias de armazenamento para garantir energia mesmo durante quedas ou à noite, maximizando sua independência.</p>
+            </div>
+
+            <div class="servico-card reveal">
+                <div class="servico-icon">📊</div>
+                <h3>Monitoramento</h3>
+                <p>Plataforma de monitoramento em tempo real para acompanhar a geração e o desempenho do seu sistema 24h por dia.</p>
+            </div>
+
+            <div class="servico-card reveal">
+                <div class="servico-icon">🛠</div>
+                <h3>Manutenção</h3>
+                <p>Manutenção preventiva e corretiva para garantir máxima performance e prolongar a vida útil do seu sistema solar.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===================== PROJETOS ===================== -->
+<section id="projetos">
+    <div class="container">
+        <div class="projetos-header reveal">
+            <div>
+                <span class="section-tag">📸 Portfólio</span>
+                <h2 class="section-title">Projetos <span>realizados</span></h2>
+            </div>
+            <a href="#contato" class="btn btn-outline">Ver todos</a>
+        </div>
+
+        <!-- Projetos vindos do banco via Thymeleaf -->
+        <div class="projetos-grid">
+
+            <!-- Se existirem projetos cadastrados -->
+            <th:block th:if="${projetos != null and !projetos.isEmpty()}">
+                <div class="projeto-card reveal" th:each="projeto : ${projetos}">
+                    <div class="projeto-img">
+                        <img th:if="${projeto.imagemUrl != null and !projeto.imagemUrl.isEmpty()}"
+                             th:src="${projeto.imagemUrl}"
+                             th:alt="${projeto.titulo}" />
+                        <span th:unless="${projeto.imagemUrl != null and !projeto.imagemUrl.isEmpty()}">☀</span>
+                    </div>
+                    <div class="projeto-body">
+                        <div class="projeto-tag" th:text="${projeto.tipo != null ? projeto.tipo : 'Solar'}">Residencial</div>
+                        <h3 th:text="${projeto.titulo}">Nome do Projeto</h3>
+                        <p th:text="${projeto.descricao}">Descrição do projeto instalado.</p>
+                        <div class="projeto-meta">
+                            <span th:if="${projeto.potencia != null}">⚡ <strong th:text="${projeto.potencia}">0</strong> kWp</span>
+                            <span th:if="${projeto.cidade != null}">📍 <strong th:text="${projeto.cidade}">Cidade</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+            <!-- Estado vazio -->
+            <div class="projetos-empty reveal" th:if="${projetos == null or projetos.isEmpty()}">
+                <div style="font-size:3rem;margin-bottom:16px">🔆</div>
+                <p style="font-size:1rem;color:var(--text-muted)">Em breve, confira nossos projetos concluídos aqui!</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===================== DEPOIMENTOS ===================== -->
+<section id="depoimentos">
+    <div class="container">
+        <div class="depoimentos-header reveal">
+            <span class="section-tag">💬 Clientes</span>
+            <h2 class="section-title">O que dizem sobre <span>nós</span></h2>
+            <p class="section-sub">A satisfação dos nossos clientes é o maior reconhecimento do nosso trabalho.</p>
+        </div>
+
+        <div class="depoimentos-grid">
+
+            <th:block th:if="${depoimentos != null and !depoimentos.isEmpty()}">
+                <div class="depoimento-card reveal" th:each="dep : ${depoimentos}">
+                    <div class="depoimento-stars">★★★★★</div>
+                    <div class="depoimento-quote">"</div>
+                    <p th:text="${dep.texto}">Depoimento do cliente aqui.</p>
+                    <div class="depoimento-author">
+                        <div class="depoimento-avatar">👤</div>
+                        <div>
+                            <strong th:text="${dep.autor}">Nome do Cliente</strong>
+                            <span th:text="${dep.cidade != null ? dep.cidade : 'Cliente AMV Solar'}">Cidade</span>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+            <!-- Estado vazio -->
+            <div class="depoimentos-empty reveal" th:if="${depoimentos == null or depoimentos.isEmpty()}">
+                <div style="font-size:3rem;margin-bottom:16px">💬</div>
+                <p style="font-size:1rem;color:var(--text-muted)">Os depoimentos dos nossos clientes aparecerão aqui em breve.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===================== CONTATO ===================== -->
+<section id="contato">
+    <div class="container">
+        <div class="contato-grid">
+
+            <!-- Info -->
+            <div class="contato-info reveal">
+                <span class="section-tag">📞 Fale conosco</span>
+                <h2 class="section-title">Vamos <span>conversar?</span></h2>
+                <p class="section-sub">
+                    Entre em contato e descubra como a energia solar pode transformar
+                    sua conta de luz e seu futuro.
+                </p>
+
+                <div class="contato-items">
+
+                    <div class="contato-item">
+                        <div class="contato-item-icon">✉</div>
+                        <div class="contato-item-text">
+                            <strong>E-mail</strong>
+                            <p><a href="mailto:vendas.amv.solar@gmail.com">vendas.amv.solar@gmail.com</a></p>
+                        </div>
+                    </div>
+
+                    <div class="contato-item">
+                        <div class="contato-item-icon">🕐</div>
+                        <div class="contato-item-text">
+                            <strong>Horário de Atendimento</strong>
+                            <p>Das 8:00 às 17:30 — Segunda a Sexta<br />
+                                Ou <a href="#contato">agende seu atendimento</a> pelo formulário.</p>
+                        </div>
+                    </div>
+
+                    <div class="contato-item">
+                        <div class="contato-item-icon">💬</div>
+                        <div class="contato-item-text">
+                            <strong>WhatsApp</strong>
+                            <p><a href="https://wa.me/5500000000000" target="_blank">Clique para conversar</a></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Formulário -->
+            <div class="contato-form-wrap reveal">
+                <div class="form-title">Solicite seu orçamento</div>
+
+                <!--
+                  Action aponta para o endpoint do LeadController (POST /contato)
+                  O CSRF token é injetado automaticamente pelo Thymeleaf quando Spring Security está ativo.
+                -->
+                <form th:action="@{/contato}" method="post" id="contatoForm">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nome">Nome completo</label>
+                            <input type="text" id="nome" name="nome"
+                                   placeholder="Seu nome" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="telefone">Telefone / WhatsApp</label>
+                            <input type="tel" id="telefone" name="telefone"
+                                   placeholder="(00) 90000-0000" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email"
+                               placeholder="seu@email.com" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipo">Tipo de instalação</label>
+                        <select id="tipo" name="tipo">
+                            <option value="">Selecione...</option>
+                            <option value="Residencial">Residencial</option>
+                            <option value="Comercial">Comercial</option>
+                            <option value="Industrial">Industrial</option>
+                            <option value="Rural">Rural</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mensagem">Mensagem (opcional)</label>
+                        <textarea id="mensagem" name="mensagem"
+                                  placeholder="Conte um pouco sobre seu consumo ou dúvidas..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary form-submit">
+                        ☀ Enviar solicitação
+                    </button>
+
+                    <!-- Feedback de sucesso/erro via Thymeleaf -->
+                    <div class="form-feedback success"
+                         th:if="${sucesso}"
+                         th:text="${sucesso}">
+                    </div>
+                    <div class="form-feedback error"
+                         th:if="${erro}"
+                         th:text="${erro}">
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+    <div class="container">
+        <div class="footer-inner">
+            <div class="footer-logo">AMV<span>☀</span>SOLAR</div>
+            <ul class="footer-links">
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#servicos">Serviços</a></li>
+                <li><a href="#projetos">Projetos</a></li>
+                <li><a href="#depoimentos">Depoimentos</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+            <a href="mailto:vendas.amv.solar@gmail.com" class="btn btn-outline" style="font-size:0.85rem;padding:10px 22px;">
+                vendas.amv.solar@gmail.com
+            </a>
+        </div>
+        <p class="footer-copy">
+            &copy; <span id="year"></span> AMV Solar — Todos os direitos reservados.
+            Energia limpa, futuro garantido. ☀
+        </p>
+    </div>
+</footer>
+
+<!-- WhatsApp flutuante -->
+<a class="whatsapp-float" href="https://wa.me/5500000000000" target="_blank" title="Fale conosco no WhatsApp">
+    💬
+</a>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script>
+    /* --- Ano dinâmico --- */
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* --- Navbar scroll --- */
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    /* --- Hamburger / Mobile menu --- */
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+
+    function closeMobile() {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* --- Scroll reveal --- */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    /* --- Smooth anchor scroll (fallback) --- */
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', e => {
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    /* --- Máscara de telefone --- */
+    const tel = document.getElementById('telefone');
+    if (tel) {
+      tel.addEventListener('input', () => {
+        let v = tel.value.replace(/\D/g, '').slice(0, 11);
+        if (v.length <= 10)
+          v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+        else
+          v = v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+        tel.value = v.trim().replace(/-$/, '');
+      });
+    }
+</script>
+
+</body>
+</html>
