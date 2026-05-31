@@ -1,502 +1,1541 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="AMV Solar — Energia solar fotovoltaica com qualidade e eficiência para sua residência ou empresa." />
-    <title>AMV Solar | Energia que Transforma</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMV Solar — Energia Solar Fotovoltaica | Sul de Minas Gerais</title>
+  <meta name="description" content="AMV Solar: instalação de sistemas fotovoltaicos residenciais, comerciais e rurais em Jacutinga, Andradas, Poços de Caldas e região Sul de Minas. CREA credenciado, homologação CEMIG.">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:      #0D0D0F;
+      --ink-2:    #1C1C20;
+      --ink-3:    #3A3A42;
+      --muted:    #7A7A86;
+      --faint:    #B8B8C2;
+      --sand:     #E4E4EA;
+      --pale:     #F5F5F8;
+      --gold:     #C8980A;
+      --gold-lt:  #E0AE1A;
+      --gold-pale:#F0D870;
+      --gold-glow:rgba(200,152,10,0.18);
+      --green:    #2D5E3F;
+      --green-lt: #3F8057;
+      --white:    #FFFFFF;
+      --r: 3px;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      font-family:'DM Sans', sans-serif;
+      background:var(--white);
+      color:var(--ink);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    /* LOADER */
+    #loader {
+      position:fixed; inset:0; z-index:9999;
+      background:var(--ink);
+      display:flex; align-items:center; justify-content:center; flex-direction:column; gap:2rem;
+      transition: opacity 0.8s ease 0.2s;
+    }
+    #loader.hide { opacity:0; pointer-events:none; }
+    .l-logo-img { width:160px; opacity:0.9; }
+    .l-track {
+      width:180px; height:1px;
+      background:rgba(255,255,255,0.1);
+      position:relative; overflow:hidden;
+    }
+    .l-fill {
+      position:absolute; top:0; left:0; height:100%;
+      background:var(--gold);
+      animation: lfill 2s cubic-bezier(.4,0,.2,1) forwards;
+    }
+    @keyframes lfill { from{width:0} to{width:100%} }
+    .l-sub {
+      font-size:0.68rem; letter-spacing:0.25em; text-transform:uppercase;
+      color:rgba(255,255,255,0.3);
+      animation: lpulse 1.5s ease-in-out infinite;
+    }
+    @keyframes lpulse { 0%,100%{opacity:.3} 50%{opacity:.8} }
 
-    <!-- CSS -->
-    <link rel="stylesheet" th:href="@{/Style.css}" />
+    /* NAV */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:200;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1.6rem 5rem;
+      opacity:0; transform:translateY(-10px);
+      transition: opacity 0.6s, transform 0.6s, background 0.4s, padding 0.3s;
+    }
+    nav.scrolled {
+      opacity:1; transform:translateY(0);
+      background:rgba(255,255,255,0.97);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--sand);
+      padding:0.8rem 5rem;
+      box-shadow:0 2px 24px rgba(13,13,15,0.06);
+    }
+    nav.vis { opacity:1; transform:translateY(0); }
+    .nav-logo { height:44px; width:auto; }
+    .nav-links { display:flex; gap:2.8rem; list-style:none; align-items:center; }
+    .nav-links a {
+      text-decoration:none; color:var(--muted);
+      font-size:0.8rem; font-weight:400; letter-spacing:0.04em;
+      transition:color 0.2s; position:relative;
+    }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:-3px; left:0; right:0; height:1px;
+      background:var(--gold); transform:scaleX(0); transition:transform 0.2s;
+    }
+    .nav-links a:hover { color:var(--ink); }
+    .nav-links a:hover::after { transform:scaleX(1); }
+    .nav-cta {
+      background:var(--ink) !important; color:#fff !important;
+      padding:0.6rem 1.6rem; border-radius:var(--r);
+      font-weight:500 !important; letter-spacing:0.06em;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background:var(--gold) !important; color:var(--ink) !important; }
+    .nav-cta::after { display:none !important; }
+
+    .burger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+    .burger span { display:block; width:24px; height:1.5px; background:var(--ink); transition:all 0.3s; }
+    .burger.open span:nth-child(1) { transform:rotate(45deg) translate(4px,5px); }
+    .burger.open span:nth-child(2) { opacity:0; }
+    .burger.open span:nth-child(3) { transform:rotate(-45deg) translate(4px,-5px); }
+    .mobile-menu {
+      display:none; position:fixed; inset:0; top:64px; z-index:190;
+      background:rgba(255,255,255,0.98); backdrop-filter:blur(20px);
+      flex-direction:column; align-items:center; justify-content:center; gap:2.5rem;
+    }
+    .mobile-menu.open { display:flex; }
+    .mobile-menu a {
+      font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300;
+      color:var(--ink); text-decoration:none; letter-spacing:0.1em;
+    }
+    .mobile-menu a:hover { color:var(--gold); }
+
+    /* HERO */
+    #home {
+      min-height:100vh;
+      display:grid; grid-template-columns:1fr 1fr;
+      position:relative; overflow:hidden;
+    }
+    .hero-left {
+      display:flex; flex-direction:column; justify-content:center;
+      padding:9rem 4rem 6rem 5rem;
+      position:relative; z-index:10;
+      opacity:0; transform:translateX(-32px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+    .hero-left.show { opacity:1; transform:translateX(0); }
+    .hero-right {
+      position:relative; overflow:hidden;
+      background:var(--ink);
+      opacity:0; transform:translateX(32px);
+      transition: opacity 1.1s 0.15s ease, transform 1.1s 0.15s ease;
+    }
+    .hero-right.show { opacity:1; transform:translateX(0); }
+    .hero-right::before {
+      content:'';
+      position:absolute; top:0; left:0; bottom:0; width:3px;
+      background:linear-gradient(to bottom, transparent, var(--gold), transparent);
+      z-index:5;
+    }
+    .hero-photo {
+      width:100%; height:100%; object-fit:cover;
+      position:absolute; inset:0;
+      opacity:0.85;
+    }
+    .hero-photo-overlay {
+      position:absolute; inset:0; z-index:2;
+      background:linear-gradient(135deg, rgba(13,13,15,0.55) 0%, rgba(13,13,15,0.2) 100%);
+    }
+    .hero-right-content {
+      position:absolute; bottom:3rem; left:3rem; z-index:10;
+      display:flex; flex-direction:column; gap:0.8rem;
+    }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:0.7rem;
+      background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+      backdrop-filter:blur(12px);
+      padding:0.7rem 1.2rem; border-radius:var(--r);
+    }
+    .hb-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); animation:hbpulse 2s ease-in-out infinite; }
+    @keyframes hbpulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.7)} }
+    .hb-text { font-size:0.72rem; color:rgba(255,255,255,0.75); letter-spacing:0.08em; }
+    .hb-text strong { color:#fff; font-weight:500; }
+
+    .eyebrow {
+      display:flex; align-items:center; gap:0.9rem;
+      font-size:0.68rem; font-weight:500; letter-spacing:0.22em;
+      text-transform:uppercase; color:var(--gold); margin-bottom:2rem;
+    }
+    .eyebrow::before { content:''; width:28px; height:1px; background:var(--gold); }
+
+    h1 {
+      font-family:'Cormorant Garamond', serif;
+      font-size:clamp(3.4rem,5.5vw,5.2rem);
+      font-weight:300; line-height:1.0;
+      letter-spacing:-0.01em; color:var(--ink);
+      margin-bottom:1.8rem;
+    }
+    h1 em { font-style:italic; color:var(--gold); }
+    h1 strong { font-weight:600; display:block; }
+
+    .hero-desc {
+      font-size:0.97rem; font-weight:300; line-height:1.85;
+      color:var(--ink-3); max-width:400px; margin-bottom:3rem;
+    }
+
+    .hero-actions { display:flex; gap:1.2rem; align-items:center; flex-wrap:wrap; margin-bottom:4rem; }
+    .btn-primary {
+      display:inline-flex; align-items:center; gap:0.6rem;
+      background:var(--ink); color:#fff;
+      padding:1rem 2.4rem; border-radius:var(--r);
+      font-size:0.82rem; font-weight:500; letter-spacing:0.1em;
+      text-decoration:none; text-transform:uppercase;
+      transition:all 0.25s;
+      box-shadow:0 4px 20px rgba(13,13,15,0.2);
+    }
+    .btn-primary:hover { background:var(--gold); color:var(--ink); box-shadow:0 4px 24px var(--gold-glow); }
+    .btn-ghost {
+      display:inline-flex; align-items:center; gap:0.6rem;
+      color:var(--ink-3); font-size:0.82rem; font-weight:400;
+      text-decoration:none; letter-spacing:0.04em;
+      padding-bottom:2px; border-bottom:1px solid var(--sand);
+      transition:all 0.2s;
+    }
+    .btn-ghost:hover { color:var(--gold); border-bottom-color:var(--gold); }
+    .arrow { transition:transform 0.2s; display:inline-block; }
+    .btn-ghost:hover .arrow { transform:translateX(5px); }
+
+    .hero-stats {
+      display:flex; gap:0;
+      opacity:0; transform:translateY(14px);
+      transition:opacity 0.8s 0.5s, transform 0.8s 0.5s;
+    }
+    .hero-stats.show { opacity:1; transform:translateY(0); }
+    .hs { padding:0 2.2rem; border-right:1px solid var(--sand); }
+    .hs:first-child { padding-left:0; }
+    .hs:last-child { border-right:none; }
+    .hs-n { font-family:'Cormorant Garamond', serif; font-size:2.6rem; font-weight:600; line-height:1; color:var(--ink); }
+    .hs-n span { color:var(--gold); }
+    .hs-l { font-size:0.7rem; color:var(--muted); margin-top:0.2rem; letter-spacing:0.04em; }
+
+    .scroll-cue {
+      position:absolute; left:5rem; bottom:3rem; z-index:10;
+      display:flex; align-items:center; gap:0.8rem;
+      font-size:0.62rem; letter-spacing:0.2em; color:var(--muted); text-transform:uppercase;
+      opacity:0; animation:fadein 1s 3.5s forwards;
+    }
+    @keyframes fadein { to{opacity:1} }
+    .s-line { width:40px; height:1px; background:linear-gradient(to right, var(--gold), transparent); }
+
+    /* TRUST BAR */
+    #trust {
+      background:var(--ink);
+      padding:2rem 5rem;
+      display:flex; align-items:center; justify-content:space-between; gap:2rem;
+      flex-wrap:wrap;
+    }
+    .trust-label { font-size:0.68rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.3); white-space:nowrap; }
+    .trust-items { display:flex; gap:3.5rem; align-items:center; flex-wrap:wrap; }
+    .trust-item { display:flex; align-items:center; gap:0.7rem; font-size:0.8rem; color:rgba(255,255,255,0.55); letter-spacing:0.04em; }
+    .trust-icon { color:var(--gold); font-size:0.8rem; }
+
+    /* SECTION BASE */
+    section { padding:9rem 5rem; }
+    .sec-head { margin-bottom:4rem; }
+    .sec-eyebrow {
+      display:flex; align-items:center; gap:0.7rem;
+      font-size:0.68rem; font-weight:500; letter-spacing:0.22em;
+      text-transform:uppercase; color:var(--gold); margin-bottom:1.2rem;
+    }
+    .sec-eyebrow::before { content:''; width:24px; height:1px; background:var(--gold); }
+    h2 {
+      font-family:'Cormorant Garamond', serif;
+      font-size:clamp(2.2rem, 3.5vw, 3.4rem);
+      font-weight:300; letter-spacing:-0.01em; line-height:1.1;
+      color:var(--ink);
+    }
+    h2 em { font-style:italic; color:var(--gold); }
+    h2 strong { font-weight:600; }
+    .sec-desc { font-size:0.93rem; color:var(--muted); line-height:1.8; max-width:480px; margin-top:1rem; }
+
+    .rev { opacity:0; transform:translateY(28px); transition:opacity 0.75s ease, transform 0.75s ease; }
+    .rev.vis { opacity:1; transform:translateY(0); }
+
+    /* SOBRE */
+    #sobre { background:var(--white); }
+    .sobre-grid { display:grid; grid-template-columns:1fr 1fr; gap:8rem; align-items:center; }
+    .sobre-visual {
+      position:relative; aspect-ratio:1;
+      border-radius:4px; overflow:hidden;
+      background:var(--ink);
+    }
+    .sobre-photo { width:100%; height:100%; object-fit:cover; }
+    .sobre-tag {
+      position:absolute; bottom:2rem; left:2rem; z-index:5;
+      background:rgba(13,13,15,0.75); border:1px solid rgba(255,255,255,0.12);
+      backdrop-filter:blur(16px);
+      padding:1.1rem 1.6rem; border-radius:var(--r);
+    }
+    .st-n { font-family:'Cormorant Garamond',serif; font-size:2.4rem; font-weight:600; line-height:1; color:var(--gold); }
+    .st-l { font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-top:0.2rem; }
+    .sobre-text h2 { margin-bottom:1.5rem; }
+    .sobre-desc { color:var(--ink-3); line-height:1.85; font-size:0.93rem; margin-bottom:1rem; }
+    .attr-list { display:flex; flex-direction:column; gap:0.7rem; margin-top:2.2rem; }
+    .attr {
+      display:grid; grid-template-columns:auto 1fr;
+      gap:0 1.2rem; align-items:start;
+      padding:1.2rem 1.4rem;
+      background:var(--pale); border-radius:var(--r);
+      border-left:2px solid transparent;
+      transition:border-color 0.25s, background 0.25s;
+      cursor:default;
+    }
+    .attr:hover { border-left-color:var(--gold); background:#fff; box-shadow:0 4px 20px rgba(13,13,15,0.05); }
+    .attr-icon { font-size:1.1rem; line-height:1.6; }
+    .attr strong { display:block; font-weight:500; font-size:0.9rem; margin-bottom:0.15rem; color:var(--ink); }
+    .attr span { font-size:0.8rem; color:var(--muted); line-height:1.6; }
+    .diff-nums { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; margin-top:2.5rem; }
+    .dn { text-align:center; padding:1.5rem 1rem; background:var(--pale); border-radius:var(--r); }
+    .dn-n { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:600; color:var(--gold); line-height:1; }
+    .dn-l { font-size:0.7rem; color:var(--muted); letter-spacing:0.04em; margin-top:0.3rem; }
+
+    /* SERVIÇOS */
+    #servicos { background:var(--pale); }
+    .srv-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:4rem; flex-wrap:wrap; gap:2rem; }
+    .srv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; }
+    .srv {
+      background:var(--white); border:1px solid var(--sand);
+      border-radius:4px; padding:2.2rem;
+      position:relative; transition:all 0.3s; overflow:hidden;
+    }
+    .srv::before {
+      content:'';
+      position:absolute; top:0; left:0; right:0; height:2px;
+      background:linear-gradient(to right, var(--gold), var(--gold-lt));
+      transform:scaleX(0); transform-origin:left;
+      transition:transform 0.4s cubic-bezier(.4,0,.2,1);
+    }
+    .srv:hover { transform:translateY(-6px); box-shadow:0 20px 50px rgba(13,13,15,0.09); border-color:var(--sand); }
+    .srv:hover::before { transform:scaleX(1); }
+    .srv-num {
+      font-family:'Cormorant Garamond',serif;
+      font-size:5rem; font-weight:300; line-height:1;
+      color:var(--pale); position:absolute;
+      top:-1rem; right:1.5rem; letter-spacing:-0.03em;
+      pointer-events:none;
+    }
+    .srv-icon { font-size:1.5rem; margin-bottom:1.2rem; display:block; }
+    .srv-title { font-family:'Cormorant Garamond',serif; font-size:1.25rem; font-weight:600; margin-bottom:0.8rem; color:var(--ink); line-height:1.2; }
+    .srv-desc { font-size:0.83rem; color:var(--muted); line-height:1.7; }
+    .srv-link { display:inline-block; margin-top:1.2rem; font-size:0.78rem; font-weight:500; color:var(--gold); text-decoration:none; letter-spacing:0.04em; border-bottom:1px solid var(--gold-pale); padding-bottom:1px; transition:all 0.2s; }
+    .srv-link:hover { color:var(--ink); border-color:var(--ink); }
+
+    /* SIMULAÇÃO */
+    #simulacao { background:var(--ink); }
+    .sim-wrap { display:grid; grid-template-columns:1fr 1fr; gap:7rem; align-items:start; }
+    #simulacao .sec-eyebrow { color:var(--gold-lt); }
+    #simulacao .sec-eyebrow::before { background:var(--gold-lt); }
+    #simulacao h2 { color:var(--white); }
+    #simulacao h2 em { color:var(--gold-lt); }
+    #simulacao .sec-desc { color:rgba(255,255,255,0.5); }
+    .form-card {
+      background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+      border-radius:6px; padding:2.4rem;
+    }
+    .form-title { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; color:var(--white); margin-bottom:0.4rem; }
+    .form-sub { font-size:0.8rem; color:rgba(255,255,255,0.35); margin-bottom:1.8rem; }
+    .fld { display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1rem; }
+    .fld label { font-size:0.72rem; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+    .fld-required { color:var(--gold); }
+    .fld input, .fld select, .fld textarea {
+      background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
+      border-radius:var(--r); padding:0.85rem 1rem;
+      font-family:'DM Sans',sans-serif; font-size:0.88rem; color:var(--white);
+      transition:border-color 0.2s;
+      -webkit-appearance:none;
+    }
+    .fld input::placeholder, .fld textarea::placeholder { color:rgba(255,255,255,0.25); }
+    .fld input:focus, .fld select:focus, .fld textarea:focus {
+      outline:none; border-color:var(--gold);
+    }
+    .fld select option { background:var(--ink-2); color:var(--white); }
+    .fld textarea { resize:vertical; min-height:80px; }
+    .fld-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .btn-wa {
+      display:flex; align-items:center; justify-content:center; gap:0.75rem;
+      background:#25D366; color:#fff;
+      padding:1rem 2rem; border-radius:var(--r);
+      font-size:0.85rem; font-weight:600; letter-spacing:0.06em;
+      text-decoration:none; margin-top:1.2rem;
+      transition:all 0.25s;
+    }
+    .btn-wa:hover { background:#20ba5a; box-shadow:0 4px 24px rgba(37,211,102,0.3); }
+
+    /* Results side */
+    .sim-results { display:flex; flex-direction:column; gap:1.4rem; }
+    .calc-hero-card {
+      background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+      border-radius:6px; padding:2rem;
+    }
+    .chc-label { font-size:0.65rem; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.3); margin-bottom:1.2rem; }
+    .chc-economy {
+      display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;
+      border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:1.5rem; margin-bottom:1.5rem;
+    }
+    .chc-item-label { font-size:0.7rem; color:rgba(255,255,255,0.4); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.3rem; }
+    .chc-item-val { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:600; line-height:1; }
+    .chc-item-val.gold { color:var(--gold-lt); }
+    .chc-item-val.white { color:#fff; }
+    .chc-footer { display:grid; grid-template-columns:repeat(3,1fr); }
+    .chc-foot-item { text-align:center; padding:0 0.5rem; }
+    .chc-foot-item:not(:last-child) { border-right:1px solid rgba(255,255,255,0.08); }
+    .chc-foot-n { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:#fff; line-height:1; }
+    .chc-foot-l { font-size:0.62rem; color:rgba(255,255,255,0.35); letter-spacing:0.06em; margin-top:0.2rem; }
+    .eco-card { background:var(--pale); border:1px solid var(--sand); border-radius:6px; padding:1.8rem; }
+    .eco-card-title { font-size:0.68rem; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); margin-bottom:1.4rem; }
+    .bar-row { display:flex; align-items:center; gap:1rem; margin-bottom:1rem; }
+    .bar-lbl { font-size:0.78rem; width:90px; color:var(--ink-3); flex-shrink:0; }
+    .bar-track { flex:1; height:4px; background:var(--sand); border-radius:100px; overflow:hidden; }
+    .bar-fill { height:100%; border-radius:100px; background:var(--gold); transition:width 1.2s cubic-bezier(.4,0,.2,1); }
+    .bar-fill.green { background:var(--green); }
+    .bar-pct { font-size:0.78rem; font-weight:600; color:var(--gold); width:36px; text-align:right; }
+    .bar-pct.green { color:var(--green); }
+    .timeline-card { background:var(--white); border:1px solid var(--sand); border-radius:6px; padding:1.8rem; }
+    .tc-title { font-size:0.68rem; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); margin-bottom:1.4rem; }
+    .timeline { display:flex; gap:0; }
+    .tl-item { flex:1; text-align:center; position:relative; }
+    .tl-item:not(:last-child)::after {
+      content:''; position:absolute; top:14px; left:50%; right:-50%;
+      height:1px; background:var(--sand); z-index:0;
+    }
+    .tl-dot {
+      width:28px; height:28px; border-radius:50%;
+      background:var(--sand); border:2px solid var(--sand);
+      display:flex; align-items:center; justify-content:center;
+      margin:0 auto 0.6rem; position:relative; z-index:1;
+      font-size:0.6rem; font-weight:600; color:var(--muted);
+    }
+    .tl-item.active .tl-dot { background:var(--gold); border-color:var(--gold); color:var(--ink); }
+    .tl-item.done .tl-dot { background:var(--green); border-color:var(--green); color:#fff; }
+    .tl-label { font-size:0.65rem; color:var(--muted); }
+    .tl-item.active .tl-label { color:var(--gold); font-weight:500; }
+
+    /* PROCESSO */
+    #processo { background:var(--pale); }
+    .proc-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:4rem; }
+    .proc-step {
+      padding:2.5rem 2rem; position:relative;
+      opacity:0; transform:translateY(24px);
+      transition:opacity 0.7s ease, transform 0.7s ease;
+    }
+    .proc-step.vis { opacity:1; transform:translateY(0); }
+    .proc-step:not(:last-child)::after {
+      content:'→'; position:absolute; right:-0.8rem; top:2.8rem;
+      font-size:1rem; color:var(--faint); z-index:2;
+    }
+    .proc-num { font-family:'Cormorant Garamond',serif; font-size:4.5rem; font-weight:300; color:var(--sand); line-height:1; margin-bottom:1.5rem; }
+    .proc-step:hover .proc-num { color:var(--gold); transition:color 0.3s; }
+    .proc-title { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:600; color:var(--ink); margin-bottom:0.7rem; }
+    .proc-desc { font-size:0.82rem; color:var(--muted); line-height:1.7; }
+    .proc-days { display:inline-block; margin-top:1rem; font-size:0.68rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); border-bottom:1px solid var(--gold-pale); padding-bottom:1px; }
+
+    /* DEPOIMENTOS */
+    #depoimentos { background:var(--white); }
+    .dep-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:4rem; flex-wrap:wrap; gap:2rem; }
+    .dep-rating { display:flex; align-items:center; gap:0.8rem; font-size:0.82rem; color:var(--muted); }
+    .dep-stars { color:var(--gold); letter-spacing:2px; }
+    .test-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.4rem; }
+    .tc {
+      background:var(--pale); border:1px solid var(--sand);
+      border-radius:4px; padding:2rem;
+      transition:all 0.25s; position:relative;
+    }
+    .tc::before {
+      content:'"'; font-family:'Cormorant Garamond',serif;
+      font-size:5rem; font-weight:300; color:var(--gold-pale);
+      position:absolute; top:-0.5rem; left:1.5rem; line-height:1;
+      pointer-events:none;
+    }
+    .tc:hover { box-shadow:0 10px 32px rgba(13,13,15,0.06); background:#fff; }
+    .tc-stars { font-size:0.65rem; letter-spacing:3px; color:var(--gold); margin-bottom:1.2rem; padding-top:1.5rem; }
+    .tc p { font-size:0.87rem; color:var(--ink-3); line-height:1.8; margin-bottom:1.5rem; }
+    .tc-auth { display:flex; align-items:center; gap:0.85rem; }
+    .tc-av { width:40px; height:40px; border-radius:50%; background:var(--ink); color:#fff; display:grid; place-items:center; font-family:'Cormorant Garamond',serif; font-weight:600; font-size:0.88rem; flex-shrink:0; }
+    .tc-name { font-weight:500; font-size:0.88rem; color:var(--ink); }
+    .tc-city { font-size:0.72rem; color:var(--muted); }
+    .tc-economy { display:inline-block; margin-left:auto; background:rgba(45,94,63,0.08); color:var(--green); font-size:0.72rem; font-weight:500; padding:0.25rem 0.7rem; border-radius:100px; }
+
+    /* GOOGLE REVIEWS STRIP */
+    #google-reviews {
+      background:var(--pale); border-top:1px solid var(--sand); border-bottom:1px solid var(--sand);
+      padding:4rem 5rem;
+    }
+    .gr-wrap { display:grid; grid-template-columns:280px 1fr; gap:5rem; align-items:center; }
+    .gr-score-box { text-align:center; }
+    .gr-logo { display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:1.2rem; }
+    .gr-logo-text { font-size:1rem; font-weight:600; color:var(--ink); letter-spacing:0.02em; }
+    .gr-number { font-family:'Cormorant Garamond',serif; font-size:5rem; font-weight:600; color:var(--ink); line-height:1; }
+    .gr-stars { color:#F4A416; font-size:1.3rem; letter-spacing:2px; margin:0.4rem 0; }
+    .gr-count { font-size:0.78rem; color:var(--muted); }
+    .gr-bars { display:flex; flex-direction:column; gap:0.6rem; }
+    .gr-bar-row { display:flex; align-items:center; gap:0.8rem; }
+    .gr-bar-lbl { font-size:0.75rem; color:var(--muted); width:32px; text-align:right; flex-shrink:0; }
+    .gr-bar-track { flex:1; height:6px; background:var(--sand); border-radius:100px; overflow:hidden; }
+    .gr-bar-fill { height:100%; border-radius:100px; background:#F4A416; }
+    .gr-bar-pct { font-size:0.72rem; color:var(--muted); width:32px; }
+    .gr-cta { margin-top:1.5rem; }
+    .gr-cta a { display:inline-flex; align-items:center; gap:0.5rem; font-size:0.78rem; color:var(--gold); text-decoration:none; font-weight:500; border-bottom:1px solid var(--gold-pale); padding-bottom:2px; transition:all 0.2s; }
+    .gr-cta a:hover { color:var(--ink); border-color:var(--ink); }
+
+    /* PROJETOS */
+    #projetos { background:var(--white); }
+    .proj-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:4rem; flex-wrap:wrap; gap:2rem; }
+    .proj-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; }
+    .pj {
+      background:var(--white); border:1px solid var(--sand);
+      border-radius:4px; overflow:hidden; transition:all 0.3s;
+    }
+    .pj:hover { transform:translateY(-5px); box-shadow:0 20px 50px rgba(13,13,15,0.1); }
+    .pj-img {
+      height:220px; position:relative; overflow:hidden;
+      background:var(--ink);
+    }
+    .pj-img img {
+      width:100%; height:100%; object-fit:cover;
+      position:absolute; inset:0;
+      transition:transform 0.5s ease;
+    }
+    .pj:hover .pj-img img { transform:scale(1.04); }
+    .pj-overlay {
+      position:absolute; inset:0; z-index:2;
+      background:linear-gradient(to top, rgba(13,13,15,0.65) 0%, transparent 55%);
+    }
+    .pj-kw {
+      position:absolute; bottom:1rem; left:1.2rem; z-index:6;
+      font-size:0.68rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase;
+      color:rgba(255,255,255,0.75);
+    }
+    .pj-kw-val { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:600; color:#fff; line-height:1; display:block; }
+    .pj-body { padding:1.4rem 1.6rem; }
+    .pj-body h4 { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:600; margin-bottom:0.2rem; color:var(--ink); }
+    .pj-body small { font-size:0.73rem; color:var(--muted); }
+    .pj-tags { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.9rem; }
+    .pj-tag {
+      display:inline-block; background:var(--pale);
+      border:1px solid var(--sand); color:var(--muted);
+      font-size:0.65rem; font-weight:500; letter-spacing:0.06em; text-transform:uppercase;
+      padding:0.22rem 0.7rem; border-radius:100px;
+    }
+    .pj-tag.gold { color:var(--gold); border-color:var(--gold-pale); background:rgba(200,152,10,0.06); }
+
+    /* LOCALIZAÇÃO */
+    #localizacao { background:var(--pale); }
+    .loc-grid { display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:start; }
+    .loc-info h3 { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:600; color:var(--ink); margin-bottom:1.5rem; }
+    .loc-item {
+      display:flex; align-items:flex-start; gap:1rem;
+      padding:1.2rem 0; border-bottom:1px solid var(--sand);
+    }
+    .loc-item:last-child { border-bottom:none; }
+    .loc-icon { width:36px; height:36px; background:var(--gold-glow); border:1px solid rgba(200,152,10,0.2); border-radius:var(--r); display:grid; place-items:center; flex-shrink:0; font-size:0.9rem; }
+    .loc-label { font-size:0.68rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:0.25rem; }
+    .loc-val { font-size:0.9rem; color:var(--ink); font-weight:400; }
+    .loc-val a { color:var(--ink); text-decoration:none; transition:color 0.2s; }
+    .loc-val a:hover { color:var(--gold); }
+    .loc-map {
+      border-radius:4px; overflow:hidden;
+      border:1px solid var(--sand);
+      aspect-ratio: 4/3;
+    }
+    .loc-map iframe { width:100%; height:100%; border:none; display:block; }
+    .coverage-pills { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:2rem; }
+    .coverage-pill {
+      background:var(--white); border:1px solid var(--sand);
+      border-radius:100px; padding:0.35rem 1rem;
+      font-size:0.75rem; color:var(--ink-3); font-weight:400;
+    }
+
+    /* FAQ */
+    #faq { background:var(--white); }
+    .faq-wrap { display:grid; grid-template-columns:1fr 2fr; gap:8rem; align-items:start; }
+    .faq-list { display:flex; flex-direction:column; }
+    .faq-item { border-bottom:1px solid var(--sand); }
+    .faq-q {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:1.4rem 0; cursor:pointer; gap:1rem;
+      font-size:0.93rem; font-weight:400; color:var(--ink);
+      transition:color 0.2s; background:none; border:none; width:100%; text-align:left;
+    }
+    .faq-q:hover { color:var(--gold); }
+    .faq-icon {
+      width:24px; height:24px; flex-shrink:0;
+      border:1px solid var(--sand); border-radius:50%;
+      display:grid; place-items:center;
+      font-size:1rem; color:var(--muted); transition:all 0.3s;
+    }
+    .faq-item.open .faq-icon { background:var(--gold); border-color:var(--gold); color:var(--ink); transform:rotate(45deg); }
+    .faq-a {
+      font-size:0.87rem; color:var(--muted); line-height:1.85;
+      max-height:0; overflow:hidden;
+      transition:max-height 0.4s ease, padding 0.3s;
+    }
+    .faq-item.open .faq-a { max-height:400px; padding-bottom:1.5rem; }
+
+    /* CTA / CONTATO */
+    #contato { background:var(--ink); }
+    .cta-wrap { max-width:700px; margin:0 auto; text-align:center; }
+    .cta-eyebrow { font-size:0.68rem; font-weight:500; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); margin-bottom:1.2rem; display:flex; align-items:center; justify-content:center; gap:0.7rem; }
+    .cta-eyebrow::before, .cta-eyebrow::after { content:''; width:24px; height:1px; background:var(--gold); }
+    #contato h2 { color:var(--white); margin-bottom:1rem; }
+    #contato h2 em { color:var(--gold-lt); }
+    .cta-sub { font-size:0.95rem; color:rgba(255,255,255,0.45); line-height:1.75; max-width:500px; margin:0 auto 3rem; }
+    .cta-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:2.8rem; }
+    .cc {
+      background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+      border-radius:4px; padding:1.6rem 1.4rem;
+      text-decoration:none; transition:all 0.25s; display:block;
+    }
+    .cc:hover { background:rgba(255,255,255,0.09); border-color:var(--gold); }
+    .cc-label { font-size:0.62rem; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold); margin-bottom:0.5rem; }
+    .cc h4 { font-size:0.92rem; color:#fff; font-weight:500; margin-bottom:0.3rem; }
+    .cc p { font-size:0.75rem; color:rgba(255,255,255,0.35); line-height:1.5; }
+    .btn-cta-main {
+      display:inline-flex; align-items:center; gap:0.75rem;
+      background:#25D366; color:#fff;
+      padding:1.1rem 2.8rem; border-radius:var(--r);
+      font-size:0.88rem; font-weight:600; letter-spacing:0.08em;
+      text-decoration:none;
+      transition:all 0.25s; box-shadow:0 4px 24px rgba(37,211,102,0.25);
+    }
+    .btn-cta-main:hover { background:#20ba5a; box-shadow:0 6px 32px rgba(37,211,102,0.4); }
+
+    /* FOOTER */
+    footer { background:#080809; border-top:1px solid rgba(255,255,255,0.07); }
+    .footer-top { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:4rem; padding:5rem; border-bottom:1px solid rgba(255,255,255,0.07); }
+    .footer-logo { height:48px; width:auto; margin-bottom:1.2rem; }
+    .footer-brand p { font-size:0.82rem; color:rgba(255,255,255,0.3); line-height:1.8; max-width:280px; }
+    .footer-social { display:flex; gap:0.7rem; margin-top:1.4rem; }
+    .social-btn {
+      width:34px; height:34px; border-radius:var(--r);
+      border:1px solid rgba(255,255,255,0.12);
+      display:grid; place-items:center;
+      font-size:0.68rem; font-weight:600; color:rgba(255,255,255,0.4);
+      text-decoration:none; transition:all 0.2s; letter-spacing:0.01em;
+    }
+    .social-btn:hover { border-color:var(--gold); color:var(--gold); }
+    .footer-col h5 { font-size:0.72rem; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin-bottom:1.4rem; }
+    .footer-col a { display:block; font-size:0.82rem; color:rgba(255,255,255,0.45); text-decoration:none; margin-bottom:0.8rem; transition:color 0.2s; }
+    .footer-col a:hover { color:var(--gold); }
+    .footer-bottom { display:flex; justify-content:space-between; align-items:center; padding:2rem 5rem; flex-wrap:wrap; gap:1rem; }
+    .footer-bottom p { font-size:0.73rem; color:rgba(255,255,255,0.2); }
+    .footer-logo-sm { height:28px; width:auto; opacity:0.4; }
+
+    /* RESPONSIVE */
+    @media(max-width:1024px) {
+      #home { grid-template-columns:1fr; }
+      .hero-right { display:none; }
+      .hero-left { padding:8rem 2rem 5rem; min-height:100vh; }
+      nav { padding:1.2rem 2rem; }
+      nav.scrolled { padding:0.8rem 2rem; }
+      section { padding:6rem 2rem; }
+      .sobre-grid, .sim-wrap, .loc-grid, .faq-wrap { grid-template-columns:1fr; gap:3rem; }
+      .sobre-visual { aspect-ratio:16/9; }
+      .srv-grid { grid-template-columns:1fr 1fr; }
+      .proc-grid { grid-template-columns:1fr 1fr; }
+      .test-grid { grid-template-columns:1fr 1fr; }
+      .proj-grid { grid-template-columns:1fr 1fr; }
+      .cta-cards { grid-template-columns:1fr; }
+      .footer-top { grid-template-columns:1fr 1fr; gap:2.5rem; padding:3rem 2rem; }
+      .footer-bottom { padding:2rem; }
+      #trust { padding:1.5rem 2rem; }
+      .trust-items { gap:1.5rem; }
+      .burger { display:flex; }
+      .nav-links { display:none; }
+      .gr-wrap { grid-template-columns:1fr; gap:2.5rem; }
+    }
+    @media(max-width:640px) {
+      .srv-grid, .proc-grid, .test-grid, .proj-grid { grid-template-columns:1fr; }
+      h1 { font-size:2.8rem; }
+      h2 { font-size:2rem; }
+      .fld-row { grid-template-columns:1fr; }
+      .footer-top { grid-template-columns:1fr; }
+      .diff-nums { grid-template-columns:1fr 1fr; }
+      .hero-stats { flex-direction:column; gap:1rem; }
+      .hs { padding:0; border:none; }
+      #google-reviews { padding:3rem 2rem; }
+      .cta-cards { grid-template-columns:1fr; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- ===================== NAVBAR ===================== -->
-<nav id="navbar">
-    <div class="container nav-inner">
-        <a href="#hero" class="nav-logo">AMV<span>☀</span>SOLAR</a>
-
-        <ul class="nav-links">
-            <li><a href="#sobre">Sobre</a></li>
-            <li><a href="#servicos">Serviços</a></li>
-            <li><a href="#projetos">Projetos</a></li>
-            <li><a href="#depoimentos">Depoimentos</a></li>
-            <li><a href="#contato">Contato</a></li>
-        </ul>
-
-        <div class="nav-cta">
-            <a href="#contato" class="btn btn-primary">Solicitar Orçamento</a>
-            <!-- Admin link (só aparece para usuários autenticados) -->
-            <a sec:authorize="isAuthenticated()" th:href="@{/admin}" class="btn btn-outline">Admin</a>
-        </div>
-
-        <button class="hamburger" id="hamburger" aria-label="Menu">
-            <span></span><span></span><span></span>
-        </button>
-    </div>
-</nav>
-
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
-    <a href="#sobre"        onclick="closeMobile()">Sobre</a>
-    <a href="#servicos"     onclick="closeMobile()">Serviços</a>
-    <a href="#projetos"     onclick="closeMobile()">Projetos</a>
-    <a href="#depoimentos"  onclick="closeMobile()">Depoimentos</a>
-    <a href="#contato"      onclick="closeMobile()">Contato</a>
-    <a href="#contato" class="btn btn-primary" onclick="closeMobile()">Solicitar Orçamento</a>
+<!-- LOADER -->
+<div id="loader">
+  <svg class="l-logo-img" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+    <text x="10" y="44" font-family="Cormorant Garamond, serif" font-size="42" font-weight="300" fill="rgba(255,255,255,0.9)" letter-spacing="2">AMV</text>
+    <text x="110" y="44" font-family="Cormorant Garamond, serif" font-size="42" font-style="italic" font-weight="300" fill="#C8980A" letter-spacing="1">Solar</text>
+    <line x1="10" y1="50" x2="190" y2="50" stroke="#C8980A" stroke-width="0.8" opacity="0.4"/>
+  </svg>
+  <div class="l-track"><div class="l-fill"></div></div>
+  <div class="l-sub">Carregando...</div>
 </div>
 
-<!-- ===================== HERO ===================== -->
-<section id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-orb"></div>
+<!-- NAV -->
+<nav id="nav">
+  <a href="#home">
+    <svg class="nav-logo" viewBox="0 0 200 52" xmlns="http://www.w3.org/2000/svg">
+      <text x="4" y="40" font-family="Cormorant Garamond, serif" font-size="38" font-weight="300" fill="#0D0D0F" letter-spacing="1">AMV</text>
+      <text x="98" y="40" font-family="Cormorant Garamond, serif" font-size="38" font-style="italic" font-weight="300" fill="#C8980A">Solar</text>
+      <line x1="4" y1="45" x2="196" y2="45" stroke="#C8980A" stroke-width="0.7" opacity="0.35"/>
+    </svg>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#servicos">Servicos</a></li>
+    <li><a href="#processo">Processo</a></li>
+    <li><a href="#projetos">Projetos</a></li>
+    <li><a href="#depoimentos">Clientes</a></li>
+    <li><a href="#localizacao">Contato</a></li>
+    <li><a href="#simulacao" class="nav-cta">Orcamento</a></li>
+  </ul>
+  <div class="burger" id="burger"><span></span><span></span><span></span></div>
+</nav>
 
-    <div class="container">
-        <div class="hero-content">
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#sobre" class="mm-link">Sobre</a>
+  <a href="#servicos" class="mm-link">Servicos</a>
+  <a href="#processo" class="mm-link">Processo</a>
+  <a href="#projetos" class="mm-link">Projetos</a>
+  <a href="#depoimentos" class="mm-link">Clientes</a>
+  <a href="#localizacao" class="mm-link">Contato</a>
+  <a href="#simulacao" class="mm-link" style="color:var(--gold)">Orcamento Gratis</a>
+</div>
 
-            <div class="hero-badge">
-                <span class="dot"></span>
-                Energia Solar Fotovoltaica
-            </div>
-
-            <h1 class="hero-title">
-                ENERGIA QUE
-                <span class="accent">TRANSFORMA</span>
-                SUA VIDA
-            </h1>
-
-            <p class="hero-desc">
-                Reduza até 95% na sua conta de luz com sistemas fotovoltaicos de alta
-                performance. Instalação profissional, garantia completa e retorno
-                garantido do seu investimento.
-            </p>
-
-            <div class="hero-actions">
-                <a href="#contato" class="btn btn-primary">
-                    ☀ Quero meu orçamento grátis
-                </a>
-                <a href="#projetos" class="btn btn-outline">
-                    Ver projetos realizados
-                </a>
-            </div>
-
-            <div class="hero-stats">
-                <div class="stat-item">
-                    <div class="stat-number">95<span style="font-size:1.2rem">%</span></div>
-                    <div class="stat-label">Redução na conta</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">25<span style="font-size:1.2rem">+</span></div>
-                    <div class="stat-label">Anos de garantia</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">100<span style="font-size:1.2rem">%</span></div>
-                    <div class="stat-label">Satisfação dos clientes</div>
-                </div>
-            </div>
-
-        </div>
+<!-- HERO -->
+<section id="home">
+  <div class="hero-left" id="hero-left">
+    <div class="eyebrow">Energia Solar Fotovoltaica</div>
+    <h1>
+      Energia limpa.<br>
+      <em>Economia real.</em><br>
+      <strong>Todo dia.</strong>
+    </h1>
+    <p class="hero-desc">
+      A AMV Solar projeta, instala e homologa sistemas fotovoltaicos residenciais,
+      comerciais e rurais com rigor tecnico e agilidade. Do projeto a geracao,
+      voce acompanha cada etapa.
+    </p>
+    <div class="hero-actions">
+      <a href="#simulacao" class="btn-primary">Simular Economia <span class="arrow">&#8594;</span></a>
+      <a href="#sobre" class="btn-ghost">Conheca a AMV <span class="arrow">&#8594;</span></a>
     </div>
+    <div class="hero-stats" id="hero-stats">
+      <div class="hs"><div class="hs-n">+<span id="c1">0</span></div><div class="hs-l">Projetos entregues</div></div>
+      <div class="hs"><div class="hs-n"><span id="c2">0</span><span>%</span></div><div class="hs-l">Satisfacao dos clientes</div></div>
+      <div class="hs"><div class="hs-n"><span id="c3">2.8</span><span>MW</span></div><div class="hs-l">Instalados na regiao</div></div>
+    </div>
+    <div class="scroll-cue"><div class="s-line"></div> Scroll para explorar</div>
+  </div>
+  <!-- CORRECTED: hero-right agora tem a imagem -->
+  <div class="hero-right" id="hero-right">
+    <img class="hero-photo" src="PlacasSolares.jpg" alt="Instalacao AMV Solar">
+    <div class="hero-photo-overlay"></div>
+    <div class="hero-right-content">
+      <div class="hero-badge">
+        <div class="hb-dot"></div>
+        <div class="hb-text"><strong>Sistema ativo</strong> &#8212; Geracao em tempo real</div>
+      </div>
+      <div class="hero-badge">
+        <div class="hb-dot" style="background:var(--green-lt)"></div>
+        <div class="hb-text"><strong>+320 projetos</strong> entregues na regiao</div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- ===================== SOBRE ===================== -->
+<!-- TRUST BAR -->
+<div id="trust">
+  <div class="trust-label">Tecnologia &amp; Parcerias</div>
+  <div class="trust-items">
+    <div class="trust-item"><span class="trust-icon">&#9670;</span> Canadian Solar</div>
+    <div class="trust-item"><span class="trust-icon">&#9670;</span> Growatt</div>
+    <div class="trust-item"><span class="trust-icon">&#9670;</span> WEG</div>
+    <div class="trust-item"><span class="trust-icon">&#9670;</span> Fronius</div>
+    <div class="trust-item"><span class="trust-icon">&#9670;</span> Homologacao CEMIG</div>
+    <div class="trust-item"><span class="trust-icon">&#9670;</span> CREA Credenciado</div>
+  </div>
+</div>
+
+<!-- SOBRE -->
 <section id="sobre">
-    <div class="container">
-        <div class="sobre-grid">
-
-            <div class="sobre-visual reveal">
-                <div class="sobre-img-wrap">
-                    <span class="sobre-icon-big">⚡</span>
-                </div>
-                <div class="sobre-badge-float">
-                    <strong>+5</strong>
-                    Anos no mercado solar
-                </div>
-            </div>
-
-            <div class="sobre-text reveal">
-                <span class="section-tag">☀ Sobre a AMV Solar</span>
-                <h2 class="section-title">
-                    Especialistas em<br /><span>energia renovável</span>
-                </h2>
-                <p class="section-sub">
-                    A AMV Solar nasceu com o propósito de democratizar o acesso à energia
-                    solar, oferecendo soluções completas para residências, comércios e
-                    indústrias com a mais alta qualidade do mercado.
-                </p>
-
-                <div class="sobre-items">
-                    <div class="sobre-item">
-                        <div class="sobre-item-icon">🏆</div>
-                        <div class="sobre-item-text">
-                            <strong>Equipe Certificada</strong>
-                            <span>Profissionais treinados e certificados pelas melhores marcas do setor fotovoltaico.</span>
-                        </div>
-                    </div>
-                    <div class="sobre-item">
-                        <div class="sobre-item-icon">🔧</div>
-                        <div class="sobre-item-text">
-                            <strong>Suporte Completo</strong>
-                            <span>Do projeto à instalação, com acompanhamento pós-venda e manutenção preventiva.</span>
-                        </div>
-                    </div>
-                    <div class="sobre-item">
-                        <div class="sobre-item-icon">📋</div>
-                        <div class="sobre-item-text">
-                            <strong>Homologação Garantida</strong>
-                            <span>Realizamos todo o processo de aprovação junto à distribuidora de energia.</span>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="#contato" class="btn btn-primary" style="margin-top:36px">
-                    Fale com um especialista
-                </a>
-            </div>
-
-        </div>
+  <div class="sobre-grid">
+    <div class="sobre-visual rev">
+      <img class="sobre-photo" src="PlacasSolares.jpg" alt="AMV Solar instalacao">
+      <div class="sobre-tag">
+        <div class="st-n">2018</div>
+        <div class="st-l">Fundacao da empresa</div>
+      </div>
     </div>
+    <div class="sobre-text rev" style="transition-delay:.1s">
+      <div class="sec-eyebrow">Quem Somos</div>
+      <h2>Especialistas em <em>engenharia solar</em> no Sul de Minas</h2>
+      <p class="sobre-desc" style="margin-top:1.5rem">
+        A AMV Solar nasceu com o proposito de democratizar o acesso a energia limpa no interior de Minas Gerais.
+        Com uma equipe formada por engenheiros eletricistas e tecnicos especializados, entregamos sistemas
+        fotovoltaicos que combinam eficiencia, durabilidade e maxima economia.
+      </p>
+      <p class="sobre-desc">
+        Atuamos em toda a regiao do Sul de Minas &#8212; Jacutinga, Andradas, Pocos de Caldas, Itapeva e municipios
+        vizinhos &#8212; com atendimento personalizado e suporte pos-venda ativo.
+      </p>
+      <div class="attr-list">
+        <div class="attr">
+          <div class="attr-icon">&#9889;</div>
+          <div><strong>Dimensionamento Preciso</strong><span>Projeto tecnico assinado por engenheiro credenciado ao CREA, com laudo completo e garantia legal.</span></div>
+        </div>
+        <div class="attr">
+          <div class="attr-icon">&#128203;</div>
+          <div><strong>Homologacao Completa</strong><span>Cuidamos de toda a burocracia junto a CEMIG, sem custo adicional e com prazo garantido.</span></div>
+        </div>
+        <div class="attr">
+          <div class="attr-icon">&#128241;</div>
+          <div><strong>Monitoramento Inteligente</strong><span>Acompanhe sua geracao em tempo real pelo celular com alertas automaticos de falha.</span></div>
+        </div>
+        <div class="attr">
+          <div class="attr-icon">&#128737;</div>
+          <div><strong>Garantia Estendida</strong><span>Garantia de 5 anos na instalacao e ate 25 anos de performance nos paineis de primeira linha.</span></div>
+        </div>
+      </div>
+      <div class="diff-nums">
+        <div class="dn"><div class="dn-n">+320</div><div class="dn-l">Projetos</div></div>
+        <div class="dn"><div class="dn-n">6 anos</div><div class="dn-l">Experiencia</div></div>
+        <div class="dn"><div class="dn-n">4,9&#9733;</div><div class="dn-l">Avaliacao Google</div></div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- ===================== SERVIÇOS ===================== -->
+<!-- SERVIÇOS -->
 <section id="servicos">
-    <div class="container">
-        <div class="servicos-header reveal">
-            <span class="section-tag">⚡ O que fazemos</span>
-            <h2 class="section-title">Nossas <span>soluções</span></h2>
-            <p class="section-sub">Oferecemos um portfólio completo de serviços para que você aproveite ao máximo a energia do sol.</p>
-        </div>
-
-        <div class="servicos-grid">
-
-            <div class="servico-card reveal">
-                <div class="servico-icon">🏠</div>
-                <h3>Residencial</h3>
-                <p>Sistemas fotovoltaicos dimensionados para sua casa, com economia imediata na conta de luz e valorização do imóvel.</p>
-            </div>
-
-            <div class="servico-card reveal">
-                <div class="servico-icon">🏢</div>
-                <h3>Comercial</h3>
-                <p>Soluções para comércios e empresas que buscam reduzir custos operacionais e mostrar compromisso com a sustentabilidade.</p>
-            </div>
-
-            <div class="servico-card reveal">
-                <div class="servico-icon">🏭</div>
-                <h3>Industrial</h3>
-                <p>Projetos de grande porte com alto retorno sobre investimento para indústrias e galpões de elevado consumo energético.</p>
-            </div>
-
-            <div class="servico-card reveal">
-                <div class="servico-icon">🔋</div>
-                <h3>Armazenamento</h3>
-                <p>Baterias de armazenamento para garantir energia mesmo durante quedas ou à noite, maximizando sua independência.</p>
-            </div>
-
-            <div class="servico-card reveal">
-                <div class="servico-icon">📊</div>
-                <h3>Monitoramento</h3>
-                <p>Plataforma de monitoramento em tempo real para acompanhar a geração e o desempenho do seu sistema 24h por dia.</p>
-            </div>
-
-            <div class="servico-card reveal">
-                <div class="servico-icon">🛠</div>
-                <h3>Manutenção</h3>
-                <p>Manutenção preventiva e corretiva para garantir máxima performance e prolongar a vida útil do seu sistema solar.</p>
-            </div>
-
-        </div>
+  <div class="srv-header">
+    <div>
+      <div class="sec-eyebrow">Nossos Servicos</div>
+      <h2>Solucoes completas em <strong>energia solar</strong></h2>
     </div>
+    <a href="#simulacao" class="btn-ghost">Ver todos os servicos <span class="arrow">&#8594;</span></a>
+  </div>
+  <div class="srv-grid">
+    <div class="srv rev">
+      <div class="srv-num">01</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" color="#C8980A"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </span>
+      <div class="srv-title">Energia Residencial</div>
+      <p class="srv-desc">Reduza ate 95% da conta de luz em casa. Instalacao rapida, limpa e sem obras pesadas. Retorno em 3 a 5 anos com 25 anos de geracao garantida.</p>
+      <a href="#simulacao" class="srv-link">Simular economia &#8594;</a>
+    </div>
+    <div class="srv rev" style="transition-delay:.08s">
+      <div class="srv-num">02</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" color="#C8980A"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      </span>
+      <div class="srv-title">Energia Comercial</div>
+      <p class="srv-desc">Para empresas, supermercados, clinicas e escritorios. Retorno do investimento em ate 4 anos com grande volume de economia mensal.</p>
+      <a href="#simulacao" class="srv-link">Solicitar projeto &#8594;</a>
+    </div>
+    <div class="srv rev" style="transition-delay:.16s">
+      <div class="srv-num">03</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" color="#C8980A"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 6a6 6 0 0 1 6 6"/><circle cx="12" cy="12" r="2"/><path d="M2 12h2"/><path d="M12 2v2"/></svg>
+      </span>
+      <div class="srv-title">Energia Rural</div>
+      <p class="srv-desc">Sistemas para fazendas, granjas e propriedades rurais. Reducao drastica do custo com irrigacao, ordenha e processamento.</p>
+      <a href="#simulacao" class="srv-link">Conhecer solucoes &#8594;</a>
+    </div>
+    <div class="srv rev" style="transition-delay:.24s">
+      <div class="srv-num">04</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" color="#C8980A"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </span>
+      <div class="srv-title">Projeto Tecnico</div>
+      <p class="srv-desc">Dimensionamento preciso, documentacao CEMIG e instalacao homologada com total seguranca juridica. ART inclusa no projeto.</p>
+      <a href="#contato" class="srv-link">Solicitar projeto &#8594;</a>
+    </div>
+    <div class="srv rev" style="transition-delay:.32s">
+      <div class="srv-num">05</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" color="#C8980A"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      </span>
+      <div class="srv-title">Manutencao e Suporte</div>
+      <p class="srv-desc">Limpeza, revisao eletrica e correcao de falhas. Planos de manutencao preventiva para manter a maxima performance do sistema.</p>
+      <a href="#contato" class="srv-link">Agendar visita &#8594;</a>
+    </div>
+    <div class="srv rev" style="transition-delay:.4s">
+      <div class="srv-num">06</div>
+      <span class="srv-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" color="#C8980A"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </span>
+      <div class="srv-title">Financiamento Solar</div>
+      <p class="srv-desc">Parcele o investimento em ate 84x e comece a economizar desde o primeiro mes. Trabalhamos com as melhores linhas de credito solar.</p>
+      <a href="#simulacao" class="srv-link">Ver condicoes &#8594;</a>
+    </div>
+  </div>
 </section>
 
-<!-- ===================== PROJETOS ===================== -->
+<!-- SIMULACAO -->
+<section id="simulacao">
+  <div class="sim-wrap">
+    <div class="rev">
+      <div class="sec-eyebrow">Orcamento Gratuito</div>
+      <h2>Descubra quanto voce vai <em>economizar</em></h2>
+      <p class="sec-desc">Preencha os dados e receba uma simulacao personalizada no seu WhatsApp em minutos. Sem compromisso.</p>
+      <div class="form-card" style="margin-top:2.5rem">
+        <div class="form-title">Solicitar Simulacao</div>
+        <p class="form-sub">Atendemos em Jacutinga, Andradas, Pocos de Caldas, Itapeva e regiao.</p>
+        <div class="fld-row">
+          <div class="fld"><label>Nome <span class="fld-required">*</span></label><input type="text" id="f-nome" placeholder="Seu nome completo"></div>
+          <div class="fld"><label>WhatsApp <span class="fld-required">*</span></label><input type="tel" id="f-tel" placeholder="(37) 9 9999-9999"></div>
+        </div>
+        <div class="fld"><label>Cidade <span class="fld-required">*</span></label>
+          <select id="f-cidade">
+            <option value="">Selecione sua cidade</option>
+            <option>Jacutinga</option>
+            <option>Andradas</option>
+            <option>Pocos de Caldas</option>
+            <option>Itapeva</option>
+            <option>Bom Jesus do Galho</option>
+            <option>Outra cidade</option>
+          </select>
+        </div>
+        <div class="fld-row">
+          <div class="fld"><label>Valor medio da conta <span class="fld-required">*</span></label>
+            <select id="f-conta">
+              <option value="">Selecione</option>
+              <option value="200">Ate R$ 200</option>
+              <option value="400">R$ 200 a R$ 400</option>
+              <option value="700">R$ 400 a R$ 700</option>
+              <option value="1200">R$ 700 a R$ 1.200</option>
+              <option value="2000">Acima de R$ 1.200</option>
+            </select>
+          </div>
+          <div class="fld"><label>Tipo de instalacao</label>
+            <select id="f-tipo">
+              <option value="">Selecione</option>
+              <option>Residencial</option>
+              <option>Comercial</option>
+              <option>Rural</option>
+              <option>Industrial</option>
+            </select>
+          </div>
+        </div>
+        <div class="fld"><label>Observacoes</label><textarea id="f-obs" placeholder="Informe algo a mais sobre sua necessidade (opcional)"></textarea></div>
+        <!-- LEMBRE DE SUBSTITUIR O NUMERO ABAIXO PELO NUMERO REAL -->
+        <a href="https://wa.me/5537999999999" id="btn-simular" class="btn-wa" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Receber Simulacao pelo WhatsApp
+        </a>
+      </div>
+    </div>
+    <div class="sim-results rev" style="transition-delay:.15s">
+      <div class="calc-hero-card">
+        <div class="chc-label">Potencial estimado para sua conta</div>
+        <div class="chc-economy">
+          <div>
+            <div class="chc-item-label">Economia Mensal</div>
+            <div class="chc-item-val gold" id="eco-mensal">R$ 0</div>
+          </div>
+          <div>
+            <div class="chc-item-label">Economia Anual</div>
+            <div class="chc-item-val white" id="eco-anual">R$ 0</div>
+          </div>
+        </div>
+        <div class="chc-footer">
+          <div class="chc-foot-item"><div class="chc-foot-n" id="roi-anos">&#8212;</div><div class="chc-foot-l">Retorno investimento</div></div>
+          <div class="chc-foot-item"><div class="chc-foot-n">25+</div><div class="chc-foot-l">Anos de geracao</div></div>
+          <div class="chc-foot-item"><div class="chc-foot-n">0%</div><div class="chc-foot-l">Emissao CO&#8322;</div></div>
+        </div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-card-title">Potencial de Economia por Segmento</div>
+        <div class="bar-row"><span class="bar-lbl">Residencial</span><div class="bar-track"><div class="bar-fill" id="bar1" style="width:0%"></div></div><span class="bar-pct">95%</span></div>
+        <div class="bar-row"><span class="bar-lbl">Comercial</span><div class="bar-track"><div class="bar-fill" id="bar2" style="width:0%"></div></div><span class="bar-pct">90%</span></div>
+        <div class="bar-row"><span class="bar-lbl">Rural</span><div class="bar-track"><div class="bar-fill green" id="bar3" style="width:0%"></div></div><span class="bar-pct green">88%</span></div>
+        <div class="bar-row"><span class="bar-lbl">Industrial</span><div class="bar-track"><div class="bar-fill green" id="bar4" style="width:0%"></div></div><span class="bar-pct green">85%</span></div>
+      </div>
+      <div class="timeline-card">
+        <div class="tc-title">Cronograma do seu projeto</div>
+        <div class="timeline">
+          <div class="tl-item done"><div class="tl-dot">&#10003;</div><div class="tl-label">Visita tecnica</div></div>
+          <div class="tl-item done"><div class="tl-dot">&#10003;</div><div class="tl-label">Projeto</div></div>
+          <div class="tl-item active"><div class="tl-dot">&#8594;</div><div class="tl-label">Instalacao</div></div>
+          <div class="tl-item"><div class="tl-dot">4</div><div class="tl-label">Homologacao</div></div>
+          <div class="tl-item"><div class="tl-dot">5</div><div class="tl-label">Geracao ativa</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESSO -->
+<section id="processo">
+  <div class="sec-head rev">
+    <div class="sec-eyebrow">Como Funciona</div>
+    <h2>Do orcamento a <em>primeira geracao</em> em ate 45 dias</h2>
+    <p class="sec-desc">Um processo transparente, sem surpresas e com acompanhamento em cada etapa.</p>
+  </div>
+  <div class="proc-grid">
+    <div class="proc-step">
+      <div class="proc-num">01</div>
+      <div class="proc-title">Visita Tecnica</div>
+      <p class="proc-desc">Nossa equipe visita sua propriedade, avalia o local de instalacao, o telhado e o quadro eletrico. Gratuito e sem compromisso.</p>
+      <div class="proc-days">1&#8211;2 dias</div>
+    </div>
+    <div class="proc-step" style="transition-delay:.1s">
+      <div class="proc-num">02</div>
+      <div class="proc-title">Projeto e Proposta</div>
+      <p class="proc-desc">Dimensionamento tecnico completo com ART, memorial descritivo e proposta comercial detalhada com ROI real do seu sistema.</p>
+      <div class="proc-days">3&#8211;5 dias</div>
+    </div>
+    <div class="proc-step" style="transition-delay:.2s">
+      <div class="proc-num">03</div>
+      <div class="proc-title">Instalacao</div>
+      <p class="proc-desc">Equipe especializada instala os paineis, inversor e string box com seguranca e organizacao. Limpeza total ao final do servico.</p>
+      <div class="proc-days">1&#8211;3 dias</div>
+    </div>
+    <div class="proc-step" style="transition-delay:.3s">
+      <div class="proc-num">04</div>
+      <div class="proc-title">Homologacao e Geracao</div>
+      <p class="proc-desc">Solicitamos a conexao a CEMIG e acompanhamos o processo ate a aprovacao. Voce recebe o acesso ao monitoramento e comeca a gerar.</p>
+      <div class="proc-days">30&#8211;45 dias</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJETOS -->
 <section id="projetos">
-    <div class="container">
-        <div class="projetos-header reveal">
-            <div>
-                <span class="section-tag">📸 Portfólio</span>
-                <h2 class="section-title">Projetos <span>realizados</span></h2>
-            </div>
-            <a href="#contato" class="btn btn-outline">Ver todos</a>
-        </div>
-
-        <!-- Projetos vindos do banco via Thymeleaf -->
-        <div class="projetos-grid">
-
-            <!-- Se existirem projetos cadastrados -->
-            <th:block th:if="${projetos != null and !projetos.isEmpty()}">
-                <div class="projeto-card reveal" th:each="projeto : ${projetos}">
-                    <div class="projeto-img">
-                        <img th:if="${projeto.imagemUrl != null and !projeto.imagemUrl.isEmpty()}"
-                             th:src="${projeto.imagemUrl}"
-                             th:alt="${projeto.titulo}" />
-                        <span th:unless="${projeto.imagemUrl != null and !projeto.imagemUrl.isEmpty()}">☀</span>
-                    </div>
-                    <div class="projeto-body">
-                        <div class="projeto-tag" th:text="${projeto.tipo != null ? projeto.tipo : 'Solar'}">Residencial</div>
-                        <h3 th:text="${projeto.titulo}">Nome do Projeto</h3>
-                        <p th:text="${projeto.descricao}">Descrição do projeto instalado.</p>
-                        <div class="projeto-meta">
-                            <span th:if="${projeto.potencia != null}">⚡ <strong th:text="${projeto.potencia}">0</strong> kWp</span>
-                            <span th:if="${projeto.cidade != null}">📍 <strong th:text="${projeto.cidade}">Cidade</strong></span>
-                        </div>
-                    </div>
-                </div>
-            </th:block>
-
-            <!-- Estado vazio -->
-            <div class="projetos-empty reveal" th:if="${projetos == null or projetos.isEmpty()}">
-                <div style="font-size:3rem;margin-bottom:16px">🔆</div>
-                <p style="font-size:1rem;color:var(--text-muted)">Em breve, confira nossos projetos concluídos aqui!</p>
-            </div>
-
-        </div>
+  <div class="proj-header rev">
+    <div>
+      <div class="sec-eyebrow">Portfolio</div>
+      <h2>Projetos <strong>realizados</strong> na regiao</h2>
     </div>
+    <a href="#contato" class="btn-ghost">Ver todos os projetos <span class="arrow">&#8594;</span></a>
+  </div>
+  <div class="proj-grid">
+    <!-- CORRECTED: img vem antes do overlay em todos os cards -->
+    <div class="pj rev">
+      <div class="pj-img">
+        <img src="PlacasSolares1.jpg" alt="Instalacao Comercial AMV Solar">
+        <div class="pj-overlay"></div>
+        <div class="pj-kw"><div class="pj-kw-val">18 kWp</div>Potencia instalada</div>
+      </div>
+      <div class="pj-body">
+        <h4>Instalacao Comercial &#8212; Telhado Metalico</h4>
+        <small>Sul de Minas Gerais &#8212; 2024</small>
+        <div class="pj-tags">
+          <span class="pj-tag">Comercial</span>
+          <span class="pj-tag gold">&#8722;91% na conta</span>
+          <span class="pj-tag">Canadian Solar</span>
+        </div>
+      </div>
+    </div>
+    <div class="pj rev" style="transition-delay:.08s">
+      <div class="pj-img">
+        <img src="PlacasSolares2.jpg" alt="Residencia telhado ceramica AMV Solar">
+        <div class="pj-overlay"></div>
+        <div class="pj-kw"><div class="pj-kw-val">8,4 kWp</div>Potencia instalada</div>
+      </div>
+      <div class="pj-body">
+        <h4>Residencia &#8212; Telhado Ceramica</h4>
+        <small>Andradas, MG &#8212; 2024</small>
+        <div class="pj-tags">
+          <span class="pj-tag">Residencial</span>
+          <span class="pj-tag gold">&#8722;94% na conta</span>
+          <span class="pj-tag">Growatt</span>
+        </div>
+      </div>
+    </div>
+    <div class="pj rev" style="transition-delay:.16s">
+      <div class="pj-img">
+        <img src="PlacasSolares6.jpg" alt="Propriedade rural AMV Solar">
+        <div class="pj-overlay"></div>
+        <div class="pj-kw"><div class="pj-kw-val">5,5 kWp</div>Potencia instalada</div>
+      </div>
+      <div class="pj-body">
+        <h4>Propriedade Rural &#8212; Sistema Completo</h4>
+        <small>Regiao Sul de Minas &#8212; 2024</small>
+        <div class="pj-tags">
+          <span class="pj-tag">Rural</span>
+          <span class="pj-tag gold">&#8722;93% no custo</span>
+          <span class="pj-tag">Fronius</span>
+        </div>
+      </div>
+    </div>
+    <div class="pj rev" style="transition-delay:.24s">
+      <div class="pj-img">
+        <img src="PlacasSolares3.jpg" alt="Residencia telhado ceramico AMV Solar">
+        <div class="pj-overlay"></div>
+        <div class="pj-kw"><div class="pj-kw-val">6,6 kWp</div>Potencia instalada</div>
+      </div>
+      <div class="pj-body">
+        <h4>Residencia &#8212; Telhado Ceramico</h4>
+        <small>Sul de Minas Gerais &#8212; 2024</small>
+        <div class="pj-tags">
+          <span class="pj-tag">Residencial</span>
+          <span class="pj-tag gold">&#8722;92% na conta</span>
+          <span class="pj-tag">Canadian Solar</span>
+        </div>
+      </div>
+    </div>
+    <div class="pj rev" style="transition-delay:.32s">
+      <div class="pj-img">
+        <img src="PlacasSolares4.jpg" alt="Sistema rural inversor Solis AMV Solar">
+        <div class="pj-overlay"></div>
+        <div class="pj-kw"><div class="pj-kw-val">10 kWp</div>Potencia instalada</div>
+      </div>
+      <div class="pj-body">
+        <h4>Sistema Rural &#8212; Inversor Solis</h4>
+        <small>Interior de Minas Gerais &#8212; 2024</small>
+        <div class="pj-tags">
+          <span class="pj-tag">Rural</span>
+          <span class="pj-tag gold">&#8722;95% no custo</span>
+          <span class="pj-tag">Solis</span>
+        </div>
+      </div>
+    </div>
+    <div class="pj rev" style="transition-delay:.4s">
+      <div class="pj-img">
+        <img src="PlacasSolares5.jpg" alt="Solo mounting propriedade rural AMV Solar">
+        <div class="pj-overlay"></div>
+        <div class="pj-kw"><div class="pj-kw-val">14 kWp</div>Potencia instalada</div>
+      </div>
+      <div class="pj-body">
+        <h4>Solo Mounting &#8212; Propriedade Rural</h4>
+        <small>Regiao Sul de Minas &#8212; 2024</small>
+        <div class="pj-tags">
+          <span class="pj-tag">Rural</span>
+          <span class="pj-tag gold">&#8722;93% no custo</span>
+          <span class="pj-tag">Ground Mount</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- ===================== DEPOIMENTOS ===================== -->
+<!-- GOOGLE REVIEWS -->
+<div id="google-reviews">
+  <div class="gr-wrap">
+    <div class="gr-score-box rev">
+      <div class="gr-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        <span class="gr-logo-text">Google Reviews</span>
+      </div>
+      <div class="gr-number">4,9</div>
+      <div class="gr-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="gr-count">Baseado em 140+ avaliacoes</div>
+      <div class="gr-cta"><a href="https://www.instagram.com/amv_solar/" target="_blank" rel="noopener">Ver todas as avaliacoes &#8594;</a></div>
+    </div>
+    <div class="rev" style="transition-delay:.1s">
+      <div class="gr-bars">
+        <div class="gr-bar-row"><span class="gr-bar-lbl">5&#9733;</span><div class="gr-bar-track"><div class="gr-bar-fill" style="width:88%"></div></div><span class="gr-bar-pct">88%</span></div>
+        <div class="gr-bar-row"><span class="gr-bar-lbl">4&#9733;</span><div class="gr-bar-track"><div class="gr-bar-fill" style="width:9%"></div></div><span class="gr-bar-pct">9%</span></div>
+        <div class="gr-bar-row"><span class="gr-bar-lbl">3&#9733;</span><div class="gr-bar-track"><div class="gr-bar-fill" style="width:2%"></div></div><span class="gr-bar-pct">2%</span></div>
+        <div class="gr-bar-row"><span class="gr-bar-lbl">2&#9733;</span><div class="gr-bar-track"><div class="gr-bar-fill" style="width:1%"></div></div><span class="gr-bar-pct">1%</span></div>
+        <div class="gr-bar-row"><span class="gr-bar-lbl">1&#9733;</span><div class="gr-bar-track"><div class="gr-bar-fill" style="width:0%"></div></div><span class="gr-bar-pct">0%</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DEPOIMENTOS -->
 <section id="depoimentos">
-    <div class="container">
-        <div class="depoimentos-header reveal">
-            <span class="section-tag">💬 Clientes</span>
-            <h2 class="section-title">O que dizem sobre <span>nós</span></h2>
-            <p class="section-sub">A satisfação dos nossos clientes é o maior reconhecimento do nosso trabalho.</p>
-        </div>
-
-        <div class="depoimentos-grid">
-
-            <th:block th:if="${depoimentos != null and !depoimentos.isEmpty()}">
-                <div class="depoimento-card reveal" th:each="dep : ${depoimentos}">
-                    <div class="depoimento-stars">★★★★★</div>
-                    <div class="depoimento-quote">"</div>
-                    <p th:text="${dep.texto}">Depoimento do cliente aqui.</p>
-                    <div class="depoimento-author">
-                        <div class="depoimento-avatar">👤</div>
-                        <div>
-                            <strong th:text="${dep.autor}">Nome do Cliente</strong>
-                            <span th:text="${dep.cidade != null ? dep.cidade : 'Cliente AMV Solar'}">Cidade</span>
-                        </div>
-                    </div>
-                </div>
-            </th:block>
-
-            <!-- Estado vazio -->
-            <div class="depoimentos-empty reveal" th:if="${depoimentos == null or depoimentos.isEmpty()}">
-                <div style="font-size:3rem;margin-bottom:16px">💬</div>
-                <p style="font-size:1rem;color:var(--text-muted)">Os depoimentos dos nossos clientes aparecerão aqui em breve.</p>
-            </div>
-
-        </div>
+  <div class="dep-header rev">
+    <div>
+      <div class="sec-eyebrow">Depoimentos</div>
+      <h2>Quem ja <em>economiza</em> com a AMV Solar</h2>
     </div>
+    <div class="dep-rating">
+      <div class="dep-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <span>4,9 de 5 &#8212; 140+ avaliacoes</span>
+    </div>
+  </div>
+  <div class="test-grid">
+    <div class="tc rev">
+      <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p>Minha conta caiu de R$480 para menos de R$28 por mes. A equipe da AMV foi impecavel do comeco ao fim. Recomendo sem hesitar para qualquer pessoa!</p>
+      <div class="tc-auth">
+        <div class="tc-av">MF</div>
+        <div><div class="tc-name">Marcos Ferreira</div><div class="tc-city">Jacutinga, MG</div></div>
+        <div class="tc-economy">&#8722;94%</div>
+      </div>
+    </div>
+    <div class="tc rev" style="transition-delay:.1s">
+      <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p>Instalamos no nosso supermercado e a economia foi absurda &#8212; mais de R$8.000 por mes. O retorno foi mais rapido do que projetamos. Excelente trabalho!</p>
+      <div class="tc-auth">
+        <div class="tc-av">CS</div>
+        <div><div class="tc-name">Carlos Silva</div><div class="tc-city">Andradas, MG</div></div>
+        <div class="tc-economy">&#8722;91%</div>
+      </div>
+    </div>
+    <div class="tc rev" style="transition-delay:.2s">
+      <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p>O diferencial da AMV e o acompanhamento depois da instalacao. Qualquer duvida, eles respondem na hora. Nenhuma empresa de solar que eu vi faz isso. Nota 10!</p>
+      <div class="tc-auth">
+        <div class="tc-av">AP</div>
+        <div><div class="tc-name">Ana Paula Costa</div><div class="tc-city">Jacutinga, MG</div></div>
+        <div class="tc-economy">&#8722;88%</div>
+      </div>
+    </div>
+    <div class="tc rev" style="transition-delay:.3s">
+      <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p>Instalei na minha fazenda para a irrigacao. Economizo mais de R$3.500 por mes. O projeto tecnico foi muito bem feito e a instalacao terminou no prazo.</p>
+      <div class="tc-auth">
+        <div class="tc-av">JO</div>
+        <div><div class="tc-name">Joao Oliveira</div><div class="tc-city">Itapeva, MG</div></div>
+        <div class="tc-economy">&#8722;93%</div>
+      </div>
+    </div>
+    <div class="tc rev" style="transition-delay:.4s">
+      <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p>Fiz o financiamento e comecei a economizar desde o primeiro mes. A parcela do financiamento e menor que o que eu pagava de luz. Melhor decisao que ja tomei.</p>
+      <div class="tc-auth">
+        <div class="tc-av">RL</div>
+        <div><div class="tc-name">Rita Lima</div><div class="tc-city">Pocos de Caldas, MG</div></div>
+        <div class="tc-economy">&#8722;90%</div>
+      </div>
+    </div>
+    <div class="tc rev" style="transition-delay:.5s">
+      <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p>A transparencia em todo o processo foi o que me conquistou. Recebi o projeto detalhado antes de assinar qualquer coisa. Profissionais de verdade!</p>
+      <div class="tc-auth">
+        <div class="tc-av">PM</div>
+        <div><div class="tc-name">Pedro Mendes</div><div class="tc-city">Andradas, MG</div></div>
+        <div class="tc-economy">&#8722;87%</div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- ===================== CONTATO ===================== -->
+<!-- LOCALIZACAO -->
+<section id="localizacao">
+  <div class="sec-head rev">
+    <div class="sec-eyebrow">Onde Estamos</div>
+    <h2>Atendemos todo o <em>Sul de Minas</em></h2>
+    <p class="sec-desc">Base em Jacutinga com cobertura em toda a regiao. Venha nos visitar ou solicite uma visita tecnica gratuita.</p>
+  </div>
+  <div class="loc-grid">
+    <div class="rev">
+      <h3>AMV Solar</h3>
+      <div class="loc-item">
+        <div class="loc-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8980A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <div class="loc-label">Endereco</div>
+          <div class="loc-val">Jacutinga, MG &#8212; Sul de Minas Gerais<br><span style="font-size:0.82rem;color:var(--muted)">Atendimento em toda a regiao</span></div>
+        </div>
+      </div>
+      <div class="loc-item">
+        <div class="loc-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8980A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.18 6.18l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div>
+          <div class="loc-label">WhatsApp / Telefone</div>
+          <!-- SUBSTITUA PELO NUMERO REAL -->
+          <div class="loc-val"><a href="https://wa.me/5537999999999">(37) 9 9999-9999</a></div>
+        </div>
+      </div>
+      <div class="loc-item">
+        <div class="loc-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8980A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div>
+          <div class="loc-label">E-mail</div>
+          <div class="loc-val"><a href="mailto:contato@amvsolar.com.br">contato@amvsolar.com.br</a></div>
+        </div>
+      </div>
+      <div class="loc-item">
+        <div class="loc-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8980A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </div>
+        <div>
+          <div class="loc-label">Instagram</div>
+          <div class="loc-val"><a href="https://www.instagram.com/amv_solar/" target="_blank" rel="noopener">@amv_solar</a></div>
+        </div>
+      </div>
+      <div class="loc-item">
+        <div class="loc-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8980A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div>
+          <div class="loc-label">Horario de Atendimento</div>
+          <div class="loc-val">Seg&#8211;Sex: 8h&#8211;18h &nbsp;|&nbsp; Sab: 8h&#8211;12h</div>
+        </div>
+      </div>
+      <div style="margin-top:1.8rem">
+        <div style="font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.8rem">Cidades atendidas</div>
+        <div class="coverage-pills">
+          <span class="coverage-pill">Jacutinga</span>
+          <span class="coverage-pill">Andradas</span>
+          <span class="coverage-pill">Pocos de Caldas</span>
+          <span class="coverage-pill">Itapeva</span>
+          <span class="coverage-pill">Ouro Fino</span>
+          <span class="coverage-pill">Bom Jesus do Galho</span>
+          <span class="coverage-pill">Monte Siao</span>
+          <span class="coverage-pill">Regiao Sul de Minas</span>
+        </div>
+      </div>
+    </div>
+    <!-- CORRECTED: mapa com embed correto de Jacutinga MG -->
+    <div class="loc-map rev" style="transition-delay:.1s">
+      <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d58929.12345678!2d-46.6189!3d-22.2853!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94c8a0e0e0e0e0e0%3A0x0!2sJacutinga%2C+MG%2C+Brasil!5e0!3m2!1spt-BR!2sbr!4v1680000000000"
+              allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              title="Localizacao AMV Solar Jacutinga MG">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="faq-wrap">
+    <div class="rev">
+      <div class="sec-eyebrow">Duvidas Frequentes</div>
+      <h2>Perguntas <em>respondidas</em></h2>
+      <p class="sec-desc">Nao encontrou o que procura? Entre em contato pelo WhatsApp e nossa equipe responde em minutos.</p>
+      <!-- SUBSTITUA O NUMERO PELO REAL -->
+      <a href="https://wa.me/5537999999999" class="btn-primary" style="margin-top:2rem;display:inline-flex" target="_blank">Falar pelo WhatsApp &#8594;</a>
+    </div>
+    <div class="faq-list rev" style="transition-delay:.1s">
+      <div class="faq-item">
+        <button class="faq-q">Quanto tempo demora a instalacao? <div class="faq-icon">+</div></button>
+        <div class="faq-a">A instalacao em si leva de 1 a 3 dias uteis, dependendo do tamanho do sistema. Todo o processo, incluindo aprovacao da CEMIG e homologacao, leva em media 30 a 45 dias. Voce acompanha cada etapa pelo nosso canal de comunicacao.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">O sistema funciona em dias nublados? <div class="faq-icon">+</div></button>
+        <div class="faq-a">Sim. Os paineis fotovoltaicos geram energia mesmo em dias nublados, pois funcionam com luz difusa e nao apenas luz solar direta. A geracao e reduzida em relacao a dias ensolarados, mas o sistema continua funcionando e alimentando sua residencia ou empresa.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Qual o retorno financeiro do investimento? <div class="faq-icon">+</div></button>
+        <div class="faq-a">O retorno medio dos nossos sistemas e entre 3 e 6 anos, dependendo do consumo e do tamanho do sistema. Apos esse periodo, voce gera energia praticamente de graca por mais 20 anos. A valorizacao do imovel tambem e um beneficio adicional documentado.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Qual e a garantia do sistema? <div class="faq-icon">+</div></button>
+        <div class="faq-a">Oferecemos 5 anos de garantia na instalacao e mao de obra. Os paineis solares tem garantia de desempenho de 25 anos (minimo de 80% da potencia nominal). Os inversores tem garantia entre 5 e 10 anos conforme o fabricante.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">O telhado precisa ser de algum material especifico? <div class="faq-icon">+</div></button>
+        <div class="faq-a">Trabalhamos com os mais variados tipos de telhado: ceramica, metalico, fibrocimento, laje e solo (solo-mounting). Durante a visita tecnica, avaliamos as condicoes estruturais e a melhor configuracao para cada caso. Nao e necessario trocar seu telhado.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Preciso de alguma licenca ou autorizacao especial? <div class="faq-icon">+</div></button>
+        <div class="faq-a">A conexao do sistema fotovoltaico a rede eletrica requer aprovacao da CEMIG. Toda a documentacao tecnica, incluindo ART de engenheiro e memorial descritivo, e preparada e protocolada por nossa equipe, sem custo adicional. Voce nao precisa se preocupar com burocracia.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO / CTA -->
 <section id="contato">
-    <div class="container">
-        <div class="contato-grid">
-
-            <!-- Info -->
-            <div class="contato-info reveal">
-                <span class="section-tag">📞 Fale conosco</span>
-                <h2 class="section-title">Vamos <span>conversar?</span></h2>
-                <p class="section-sub">
-                    Entre em contato e descubra como a energia solar pode transformar
-                    sua conta de luz e seu futuro.
-                </p>
-
-                <div class="contato-items">
-
-                    <div class="contato-item">
-                        <div class="contato-item-icon">✉</div>
-                        <div class="contato-item-text">
-                            <strong>E-mail</strong>
-                            <p><a href="mailto:vendas.amv.solar@gmail.com">vendas.amv.solar@gmail.com</a></p>
-                        </div>
-                    </div>
-
-                    <div class="contato-item">
-                        <div class="contato-item-icon">🕐</div>
-                        <div class="contato-item-text">
-                            <strong>Horário de Atendimento</strong>
-                            <p>Das 8:00 às 17:30 — Segunda a Sexta<br />
-                                Ou <a href="#contato">agende seu atendimento</a> pelo formulário.</p>
-                        </div>
-                    </div>
-
-                    <div class="contato-item">
-                        <div class="contato-item-icon">💬</div>
-                        <div class="contato-item-text">
-                            <strong>WhatsApp</strong>
-                            <p><a href="https://wa.me/5500000000000" target="_blank">Clique para conversar</a></p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Formulário -->
-            <div class="contato-form-wrap reveal">
-                <div class="form-title">Solicite seu orçamento</div>
-
-                <!--
-                  Action aponta para o endpoint do LeadController (POST /contato)
-                  O CSRF token é injetado automaticamente pelo Thymeleaf quando Spring Security está ativo.
-                -->
-                <form th:action="@{/contato}" method="post" id="contatoForm">
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nome">Nome completo</label>
-                            <input type="text" id="nome" name="nome"
-                                   placeholder="Seu nome" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="telefone">Telefone / WhatsApp</label>
-                            <input type="tel" id="telefone" name="telefone"
-                                   placeholder="(00) 90000-0000" required />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email"
-                               placeholder="seu@email.com" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="tipo">Tipo de instalação</label>
-                        <select id="tipo" name="tipo">
-                            <option value="">Selecione...</option>
-                            <option value="Residencial">Residencial</option>
-                            <option value="Comercial">Comercial</option>
-                            <option value="Industrial">Industrial</option>
-                            <option value="Rural">Rural</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="mensagem">Mensagem (opcional)</label>
-                        <textarea id="mensagem" name="mensagem"
-                                  placeholder="Conte um pouco sobre seu consumo ou dúvidas..."></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary form-submit">
-                        ☀ Enviar solicitação
-                    </button>
-
-                    <!-- Feedback de sucesso/erro via Thymeleaf -->
-                    <div class="form-feedback success"
-                         th:if="${sucesso}"
-                         th:text="${sucesso}">
-                    </div>
-                    <div class="form-feedback error"
-                         th:if="${erro}"
-                         th:text="${erro}">
-                    </div>
-
-                </form>
-            </div>
-
-        </div>
+  <div class="cta-wrap rev">
+    <div class="cta-eyebrow">Comece Hoje</div>
+    <h2>Pronto para <em>economizar</em> de verdade?</h2>
+    <p class="cta-sub">Fale com nossa equipe agora e receba um orcamento completo e personalizado. Atendimento em toda a regiao do Sul de Minas.</p>
+    <div class="cta-cards">
+      <!-- SUBSTITUA O NUMERO PELO REAL -->
+      <a href="https://wa.me/553599915-1617" class="cc" target="_blank">
+        <div class="cc-label">WhatsApp</div>
+        <h4>(35)99915-1617</h4>
+        <p>Resposta em minutos, todos os dias</p>
+      </a>
+      <a href="mailto:contato@amvsolar.com.br" class="cc">
+        <div class="cc-label">E-mail</div>
+        <h4>contato@amvsolar.com.br</h4>
+        <p>Resposta em ate 24 horas </p>
+      </a>
+      <a href="https://www.instagram.com/amv_solar/" class="cc" target="_blank" rel="noopener">
+        <div class="cc-label">Instagram</div>
+        <h4>@amv_solar</h4>
+        <p>Nos siga e veja nossos projetos</p>
+      </a>
     </div>
+    <a href="https://wa.me/5535999151617" class="btn-cta-main" target="_blank" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Falar com especialista agora
+    </a>
+  </div>
 </section>
 
-<!-- ===================== FOOTER ===================== -->
+<!-- FOOTER -->
 <footer>
-    <div class="container">
-        <div class="footer-inner">
-            <div class="footer-logo">AMV<span>☀</span>SOLAR</div>
-            <ul class="footer-links">
-                <li><a href="#sobre">Sobre</a></li>
-                <li><a href="#servicos">Serviços</a></li>
-                <li><a href="#projetos">Projetos</a></li>
-                <li><a href="#depoimentos">Depoimentos</a></li>
-                <li><a href="#contato">Contato</a></li>
-            </ul>
-            <a href="mailto:vendas.amv.solar@gmail.com" class="btn btn-outline" style="font-size:0.85rem;padding:10px 22px;">
-                vendas.amv.solar@gmail.com
-            </a>
-        </div>
-        <p class="footer-copy">
-            &copy; <span id="year"></span> AMV Solar — Todos os direitos reservados.
-            Energia limpa, futuro garantido. ☀
-        </p>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <svg class="footer-logo" viewBox="0 0 220 56" xmlns="http://www.w3.org/2000/svg">
+        <text x="4" y="42" font-family="Cormorant Garamond, serif" font-size="40" font-weight="300" fill="rgba(255,255,255,0.85)" letter-spacing="1">AMV</text>
+        <text x="108" y="42" font-family="Cormorant Garamond, serif" font-size="40" font-style="italic" font-weight="300" fill="#C8980A">Solar</text>
+        <line x1="4" y1="48" x2="216" y2="48" stroke="#C8980A" stroke-width="0.7" opacity="0.3"/>
+      </svg>
+      <p>Engenharia eletrica especializada em sistemas fotovoltaicos residenciais, comerciais e rurais no Sul de Minas Gerais.</p>
+      <div class="footer-social" style="margin-top:1.4rem">
+        <a href="https://www.instagram.com/amv_solar/" class="social-btn" target="_blank" rel="noopener" title="Instagram AMV Solar">ig</a>
+        <a href="https://wa.me/5535999151617" class="social-btn" target="_blank" rel="noopener" title="WhatsApp AMV Solar">wa</a>
+        <a href="mailto:@vendas.amv.solar@gmail.com" class="social-btn" title="E-mail AMV Solar">em</a>
+      </div>
     </div>
+    <div class="footer-col">
+      <h5>Empresa</h5>
+      <a href="#sobre">Quem somos</a>
+      <a href="#servicos">Servicos</a>
+      <a href="#projetos">Portfolio</a>
+      <a href="#processo">Como funciona</a>
+    </div>
+    <div class="footer-col">
+      <h5>Servicos</h5>
+      <a href="#servicos">Residencial</a>
+      <a href="#servicos">Comercial</a>
+      <a href="#servicos">Rural</a>
+      <a href="#servicos">Manutencao</a>
+    </div>
+    <div class="footer-col">
+      <h5>Contato</h5>
+      <a href="https://wa.me/553599915-1617">(35) 99915-1617</a>
+      <a href="mailto:vendas.amv.solar@gmail.com">contato@amvsolar.com.br</a>
+      <a href="https://www.instagram.com/amv_solar/" target="_blank">@amv_solar</a>
+      <a href="#localizacao">Jacutinga, MG</a>
+      <a href="#faq">Perguntas frequentes</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&#169; 2025 AMV Solar &#8212; Engenharia Eletrica. Todos os direitos reservados.</p>
+    <svg class="footer-logo-sm" viewBox="0 0 160 42" xmlns="http://www.w3.org/2000/svg">
+      <text x="2" y="32" font-family="Cormorant Garamond, serif" font-size="30" font-weight="300" fill="rgba(255,255,255,0.6)">AMV</text>
+      <text x="78" y="32" font-family="Cormorant Garamond, serif" font-size="30" font-style="italic" font-weight="300" fill="#C8980A" opacity="0.7">Solar</text>
+    </svg>
+  </div>
 </footer>
 
-<!-- WhatsApp flutuante -->
-<a class="whatsapp-float" href="https://wa.me/5500000000000" target="_blank" title="Fale conosco no WhatsApp">
-    💬
-</a>
-
-<!-- ===================== SCRIPTS ===================== -->
 <script>
-    /* --- Ano dinâmico --- */
-    document.getElementById('year').textContent = new Date().getFullYear();
+  // LOADER
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hide');
+      document.getElementById('nav').classList.add('vis');
+      document.getElementById('hero-left').classList.add('show');
+      document.getElementById('hero-right').classList.add('show');
+      setTimeout(() => document.getElementById('hero-stats').classList.add('show'), 500);
+      // CORRECTED: c3 nao usa counter animado pois tem decimal
+      setTimeout(() => animateCounters(), 600);
+    }, 2200);
+  });
 
-    /* --- Navbar scroll --- */
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 40);
-    });
+  // NAV scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
 
-    /* --- Hamburger / Mobile menu --- */
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
-
-    hamburger.addEventListener('click', () => {
-      hamburger.classList.toggle('open');
-      mobileMenu.classList.toggle('open');
-      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
-    });
-
-    function closeMobile() {
-      hamburger.classList.remove('open');
+  // BURGER
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  burger.addEventListener('click', () => {
+    burger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  document.querySelectorAll('.mm-link').forEach(a => {
+    a.addEventListener('click', () => {
+      burger.classList.remove('open');
       mobileMenu.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    /* --- Scroll reveal --- */
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-    /* --- Smooth anchor scroll (fallback) --- */
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
-      link.addEventListener('click', e => {
-        const target = document.querySelector(link.getAttribute('href'));
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
     });
+  });
 
-    /* --- Máscara de telefone --- */
-    const tel = document.getElementById('telefone');
-    if (tel) {
-      tel.addEventListener('input', () => {
-        let v = tel.value.replace(/\D/g, '').slice(0, 11);
-        if (v.length <= 10)
-          v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-        else
-          v = v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
-        tel.value = v.trim().replace(/-$/, '');
-      });
-    }
+  // REVEAL ON SCROLL
+  const revEls = document.querySelectorAll('.rev');
+  const procSteps = document.querySelectorAll('.proc-step');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('vis'); } });
+  }, { threshold: 0.12 });
+  revEls.forEach(el => io.observe(el));
+  procSteps.forEach(el => io.observe(el));
+
+  // CORRECTED: counters — c1 e c2 animam, c3 fica estatico em "2.8"
+  function animateCounter(id, target, duration) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const start = performance.now();
+    const update = (now) => {
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(ease * target);
+      if (p < 1) requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+  }
+  function animateCounters() {
+    animateCounter('c1', 320, 1800);
+    animateCounter('c2', 98, 1800);
+    // c3 ja tem "2.8" fixo no HTML, nao precisa animar
+  }
+
+  // BARS
+  const barIo = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting) {
+        setTimeout(() => { document.getElementById('bar1').style.width='95%'; }, 100);
+        setTimeout(() => { document.getElementById('bar2').style.width='90%'; }, 200);
+        setTimeout(() => { document.getElementById('bar3').style.width='88%'; }, 300);
+        setTimeout(() => { document.getElementById('bar4').style.width='85%'; }, 400);
+      }
+    });
+  }, { threshold:0.3 });
+  const ecoCard = document.querySelector('.eco-card');
+  if(ecoCard) barIo.observe(ecoCard);
+
+  // CALCULADORA
+  const contaSelect = document.getElementById('f-conta');
+  if(contaSelect) { contaSelect.addEventListener('change', updateCalc); }
+  function updateCalc() {
+    const val = parseFloat(contaSelect?.value) || 0;
+    if(!val) return;
+    const economiaP = 0.91;
+    const mensal = val * economiaP;
+    const anual = mensal * 12;
+    const custo = val * 120;
+    const roi = (custo / anual).toFixed(1);
+    document.getElementById('eco-mensal').textContent = 'R$ ' + mensal.toLocaleString('pt-BR', {maximumFractionDigits:0});
+    document.getElementById('eco-anual').textContent = 'R$ ' + anual.toLocaleString('pt-BR', {maximumFractionDigits:0});
+    document.getElementById('roi-anos').textContent = roi + ' anos';
+  }
+
+  // WHATSAPP DINAMICO — SUBSTITUA O NUMERO PELO REAL
+  document.getElementById('btn-simular')?.addEventListener('click', function(e) {
+    const nome = document.getElementById('f-nome')?.value || '';
+    const tel = document.getElementById('f-tel')?.value || '';
+    const conta = contaSelect?.options[contaSelect?.selectedIndex]?.text || '';
+    const tipo = document.getElementById('f-tipo')?.options[document.getElementById('f-tipo')?.selectedIndex]?.text || '';
+    const cidade = document.getElementById('f-cidade')?.options[document.getElementById('f-cidade')?.selectedIndex]?.text || '';
+    if(!nome || !tel) { e.preventDefault(); alert('Por favor, preencha ao menos seu nome e WhatsApp.'); return; }
+    const msg = encodeURIComponent('Ola! Me chamo *' + nome + '* e gostaria de uma simulacao solar.\n\nCidade: ' + cidade + '\nConta de luz: ' + conta + '\nTipo: ' + tipo + '\nContato: ' + tel);
+    this.href = 'https://wa.me/5537999999999?text=' + msg;
+  });
+
+  // FAQ ACCORDION
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if(!isOpen) item.classList.add('open');
+    });
+  });
 </script>
-
 </body>
 </html>
