@@ -37,15 +37,24 @@
     /* LOADER */
     #loader {
       position:fixed; inset:0; z-index:9999;
-      background:var(--ink);
+      background:#F0F0F2;
       display:flex; align-items:center; justify-content:center; flex-direction:column; gap:2rem;
       transition: opacity 0.8s ease 0.2s;
     }
     #loader.hide { opacity:0; pointer-events:none; }
-    .l-logo-img { width:160px; opacity:0.9; }
+    .l-logo-img {
+      width:340px;
+      max-width:80vw;
+      opacity:0;
+      transform:scale(0.92);
+      animation: logoIn 0.8s cubic-bezier(.4,0,.2,1) 0.3s forwards;
+    }
+    @keyframes logoIn {
+      to { opacity:1; transform:scale(1); }
+    }
     .l-track {
       width:180px; height:1px;
-      background:rgba(255,255,255,0.1);
+      background:rgba(0,0,0,0.1);
       position:relative; overflow:hidden;
     }
     .l-fill {
@@ -56,7 +65,7 @@
     @keyframes lfill { from{width:0} to{width:100%} }
     .l-sub {
       font-size:0.68rem; letter-spacing:0.25em; text-transform:uppercase;
-      color:rgba(255,255,255,0.3);
+      color:rgba(0,0,0,0.35);
       animation: lpulse 1.5s ease-in-out infinite;
     }
     @keyframes lpulse { 0%,100%{opacity:.3} 50%{opacity:.8} }
@@ -378,7 +387,6 @@
     }
     .btn-wa:hover { background:#20ba5a; box-shadow:0 4px 24px rgba(37,211,102,0.3); }
 
-    /* Results side */
     .sim-results { display:flex; flex-direction:column; gap:1.4rem; }
     .calc-hero-card {
       background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
@@ -472,7 +480,7 @@
     .tc-city { font-size:0.72rem; color:var(--muted); }
     .tc-economy { display:inline-block; margin-left:auto; background:rgba(45,94,63,0.08); color:var(--green); font-size:0.72rem; font-weight:500; padding:0.25rem 0.7rem; border-radius:100px; }
 
-    /* GOOGLE REVIEWS STRIP */
+    /* GOOGLE REVIEWS */
     #google-reviews {
       background:var(--pale); border-top:1px solid var(--sand); border-bottom:1px solid var(--sand);
       padding:4rem 5rem;
@@ -588,7 +596,7 @@
     }
     .faq-item.open .faq-a { max-height:400px; padding-bottom:1.5rem; }
 
-    /* CTA / CONTATO */
+    /* CONTATO */
     #contato { background:var(--ink); }
     .cta-wrap { max-width:700px; margin:0 auto; text-align:center; }
     .cta-eyebrow { font-size:0.68rem; font-weight:500; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); margin-bottom:1.2rem; display:flex; align-items:center; justify-content:center; gap:0.7rem; }
@@ -678,11 +686,11 @@
 
 <!-- LOADER -->
 <div id="loader">
-  <svg class="l-logo-img" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-    <text x="10" y="44" font-family="Cormorant Garamond, serif" font-size="42" font-weight="300" fill="rgba(255,255,255,0.9)" letter-spacing="2">AMV</text>
-    <text x="110" y="44" font-family="Cormorant Garamond, serif" font-size="42" font-style="italic" font-weight="300" fill="#C8980A" letter-spacing="1">Solar</text>
-    <line x1="10" y1="50" x2="190" y2="50" stroke="#C8980A" stroke-width="0.8" opacity="0.4"/>
-  </svg>
+  <img
+          class="l-logo-img"
+          src="imagem do carregamento.png"
+          alt="AMV Solar — Materiais Elétricos & Energia Solar"
+  >
   <div class="l-track"><div class="l-fill"></div></div>
   <div class="l-sub">Carregando...</div>
 </div>
@@ -698,12 +706,12 @@
   </a>
   <ul class="nav-links">
     <li><a href="#sobre">Sobre</a></li>
-    <li><a href="#servicos">Servicos</a></li>
+    <li><a href="#servicos">Serviços</a></li>
     <li><a href="#processo">Processo</a></li>
     <li><a href="#projetos">Projetos</a></li>
     <li><a href="#depoimentos">Clientes</a></li>
     <li><a href="#localizacao">Contato</a></li>
-    <li><a href="#simulacao" class="nav-cta">Orcamento</a></li>
+    <li><a href="#simulacao" class="nav-cta">Orçamento</a></li>
   </ul>
   <div class="burger" id="burger"><span></span><span></span><span></span></div>
 </nav>
@@ -711,12 +719,12 @@
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu">
   <a href="#sobre" class="mm-link">Sobre</a>
-  <a href="#servicos" class="mm-link">Servicos</a>
+  <a href="#servicos" class="mm-link">Serviços</a>
   <a href="#processo" class="mm-link">Processo</a>
   <a href="#projetos" class="mm-link">Projetos</a>
   <a href="#depoimentos" class="mm-link">Clientes</a>
   <a href="#localizacao" class="mm-link">Contato</a>
-  <a href="#simulacao" class="mm-link" style="color:var(--gold)">Orcamento Gratis</a>
+  <a href="#simulacao" class="mm-link" style="color:var(--gold)">Orçamento Grátis</a>
 </div>
 
 <!-- HERO -->
@@ -730,32 +738,31 @@
     </h1>
     <p class="hero-desc">
       A AMV Solar projeta, instala e homologa sistemas fotovoltaicos residenciais,
-      comerciais e rurais com rigor tecnico e agilidade. Do projeto a geracao,
-      voce acompanha cada etapa.
+      comerciais e rurais com rigor técnico e agilidade. Do projeto à geração,
+      você acompanha cada etapa.
     </p>
     <div class="hero-actions">
       <a href="#simulacao" class="btn-primary">Simular Economia <span class="arrow">&#8594;</span></a>
-      <a href="#sobre" class="btn-ghost">Conheca a AMV <span class="arrow">&#8594;</span></a>
+      <a href="#sobre" class="btn-ghost">Conheça a AMV <span class="arrow">&#8594;</span></a>
     </div>
     <div class="hero-stats" id="hero-stats">
       <div class="hs"><div class="hs-n">+<span id="c1">0</span></div><div class="hs-l">Projetos entregues</div></div>
-      <div class="hs"><div class="hs-n"><span id="c2">0</span><span>%</span></div><div class="hs-l">Satisfacao dos clientes</div></div>
-      <div class="hs"><div class="hs-n"><span id="c3">2.8</span><span>MW</span></div><div class="hs-l">Instalados na regiao</div></div>
+      <div class="hs"><div class="hs-n"><span id="c2">0</span><span>%</span></div><div class="hs-l">Satisfação dos clientes</div></div>
+      <div class="hs"><div class="hs-n"><span id="c3">2.8</span><span>MW</span></div><div class="hs-l">Instalados na região</div></div>
     </div>
     <div class="scroll-cue"><div class="s-line"></div> Scroll para explorar</div>
   </div>
-  <!-- CORRECTED: hero-right agora tem a imagem -->
   <div class="hero-right" id="hero-right">
-    <img class="hero-photo" src="PlacasSolares.jpg" alt="Instalacao AMV Solar">
+    <img class="hero-photo" src="PlacasSolares.jpg" alt="Instalação AMV Solar">
     <div class="hero-photo-overlay"></div>
     <div class="hero-right-content">
       <div class="hero-badge">
         <div class="hb-dot"></div>
-        <div class="hb-text"><strong>Sistema ativo</strong> &#8212; Geracao em tempo real</div>
+        <div class="hb-text"><strong>Sistema ativo</strong> &#8212; Geração em tempo real</div>
       </div>
       <div class="hero-badge">
         <div class="hb-dot" style="background:var(--green-lt)"></div>
-        <div class="hb-text"><strong>+320 projetos</strong> entregues na regiao</div>
+        <div class="hb-text"><strong>+320 projetos</strong> entregues na região</div>
       </div>
     </div>
   </div>
@@ -769,7 +776,7 @@
     <div class="trust-item"><span class="trust-icon">&#9670;</span> Growatt</div>
     <div class="trust-item"><span class="trust-icon">&#9670;</span> WEG</div>
     <div class="trust-item"><span class="trust-icon">&#9670;</span> Fronius</div>
-    <div class="trust-item"><span class="trust-icon">&#9670;</span> Homologacao CEMIG</div>
+    <div class="trust-item"><span class="trust-icon">&#9670;</span> Homologação CEMIG</div>
     <div class="trust-item"><span class="trust-icon">&#9670;</span> CREA Credenciado</div>
   </div>
 </div>
@@ -778,46 +785,46 @@
 <section id="sobre">
   <div class="sobre-grid">
     <div class="sobre-visual rev">
-      <img class="sobre-photo" src="PlacasSolares.jpg" alt="AMV Solar instalacao">
+      <img class="sobre-photo" src="PlacasSolares.jpg" alt="AMV Solar instalação">
       <div class="sobre-tag">
         <div class="st-n">2018</div>
-        <div class="st-l">Fundacao da empresa</div>
+        <div class="st-l">Fundação da empresa</div>
       </div>
     </div>
     <div class="sobre-text rev" style="transition-delay:.1s">
       <div class="sec-eyebrow">Quem Somos</div>
       <h2>Especialistas em <em>engenharia solar</em> no Sul de Minas</h2>
       <p class="sobre-desc" style="margin-top:1.5rem">
-        A AMV Solar nasceu com o proposito de democratizar o acesso a energia limpa no interior de Minas Gerais.
-        Com uma equipe formada por engenheiros eletricistas e tecnicos especializados, entregamos sistemas
-        fotovoltaicos que combinam eficiencia, durabilidade e maxima economia.
+        A AMV Solar nasceu com o propósito de democratizar o acesso à energia limpa no interior de Minas Gerais.
+        Com uma equipe formada por engenheiros eletricistas e técnicos especializados, entregamos sistemas
+        fotovoltaicos que combinam eficiência, durabilidade e máxima economia.
       </p>
       <p class="sobre-desc">
-        Atuamos em toda a regiao do Sul de Minas &#8212; Jacutinga, Andradas, Pocos de Caldas, Itapeva e municipios
-        vizinhos &#8212; com atendimento personalizado e suporte pos-venda ativo.
+        Atuamos em toda a região do Sul de Minas &#8212; Jacutinga, Andradas, Poços de Caldas, Itapeva e municípios
+        vizinhos &#8212; com atendimento personalizado e suporte pós-venda ativo.
       </p>
       <div class="attr-list">
         <div class="attr">
           <div class="attr-icon">&#9889;</div>
-          <div><strong>Dimensionamento Preciso</strong><span>Projeto tecnico assinado por engenheiro credenciado ao CREA, com laudo completo e garantia legal.</span></div>
+          <div><strong>Dimensionamento Preciso</strong><span>Projeto técnico assinado por engenheiro credenciado ao CREA, com laudo completo e garantia legal.</span></div>
         </div>
         <div class="attr">
           <div class="attr-icon">&#128203;</div>
-          <div><strong>Homologacao Completa</strong><span>Cuidamos de toda a burocracia junto a CEMIG, sem custo adicional e com prazo garantido.</span></div>
+          <div><strong>Homologação Completa</strong><span>Cuidamos de toda a burocracia junto à CEMIG, sem custo adicional e com prazo garantido.</span></div>
         </div>
         <div class="attr">
           <div class="attr-icon">&#128241;</div>
-          <div><strong>Monitoramento Inteligente</strong><span>Acompanhe sua geracao em tempo real pelo celular com alertas automaticos de falha.</span></div>
+          <div><strong>Monitoramento Inteligente</strong><span>Acompanhe sua geração em tempo real pelo celular com alertas automáticos de falha.</span></div>
         </div>
         <div class="attr">
           <div class="attr-icon">&#128737;</div>
-          <div><strong>Garantia Estendida</strong><span>Garantia de 5 anos na instalacao e ate 25 anos de performance nos paineis de primeira linha.</span></div>
+          <div><strong>Garantia Estendida</strong><span>Garantia de 5 anos na instalação e até 25 anos de performance nos painéis de primeira linha.</span></div>
         </div>
       </div>
       <div class="diff-nums">
         <div class="dn"><div class="dn-n">+320</div><div class="dn-l">Projetos</div></div>
-        <div class="dn"><div class="dn-n">6 anos</div><div class="dn-l">Experiencia</div></div>
-        <div class="dn"><div class="dn-n">4,9&#9733;</div><div class="dn-l">Avaliacao Google</div></div>
+        <div class="dn"><div class="dn-n">6 anos</div><div class="dn-l">Experiência</div></div>
+        <div class="dn"><div class="dn-n">4,9&#9733;</div><div class="dn-l">Avaliação Google</div></div>
       </div>
     </div>
   </div>
@@ -827,10 +834,10 @@
 <section id="servicos">
   <div class="srv-header">
     <div>
-      <div class="sec-eyebrow">Nossos Servicos</div>
-      <h2>Solucoes completas em <strong>energia solar</strong></h2>
+      <div class="sec-eyebrow">Nossos Serviços</div>
+      <h2>Soluções completas em <strong>energia solar</strong></h2>
     </div>
-    <a href="#simulacao" class="btn-ghost">Ver todos os servicos <span class="arrow">&#8594;</span></a>
+    <a href="#simulacao" class="btn-ghost">Ver todos os serviços <span class="arrow">&#8594;</span></a>
   </div>
   <div class="srv-grid">
     <div class="srv rev">
@@ -839,7 +846,7 @@
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" color="#C8980A"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       </span>
       <div class="srv-title">Energia Residencial</div>
-      <p class="srv-desc">Reduza ate 95% da conta de luz em casa. Instalacao rapida, limpa e sem obras pesadas. Retorno em 3 a 5 anos com 25 anos de geracao garantida.</p>
+      <p class="srv-desc">Reduza até 95% da conta de luz em casa. Instalação rápida, limpa e sem obras pesadas. Retorno em 3 a 5 anos com 25 anos de geração garantida.</p>
       <a href="#simulacao" class="srv-link">Simular economia &#8594;</a>
     </div>
     <div class="srv rev" style="transition-delay:.08s">
@@ -848,7 +855,7 @@
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" color="#C8980A"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
       </span>
       <div class="srv-title">Energia Comercial</div>
-      <p class="srv-desc">Para empresas, supermercados, clinicas e escritorios. Retorno do investimento em ate 4 anos com grande volume de economia mensal.</p>
+      <p class="srv-desc">Para empresas, supermercados, clínicas e escritórios. Retorno do investimento em até 4 anos com grande volume de economia mensal.</p>
       <a href="#simulacao" class="srv-link">Solicitar projeto &#8594;</a>
     </div>
     <div class="srv rev" style="transition-delay:.16s">
@@ -857,16 +864,16 @@
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" color="#C8980A"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 6a6 6 0 0 1 6 6"/><circle cx="12" cy="12" r="2"/><path d="M2 12h2"/><path d="M12 2v2"/></svg>
       </span>
       <div class="srv-title">Energia Rural</div>
-      <p class="srv-desc">Sistemas para fazendas, granjas e propriedades rurais. Reducao drastica do custo com irrigacao, ordenha e processamento.</p>
-      <a href="#simulacao" class="srv-link">Conhecer solucoes &#8594;</a>
+      <p class="srv-desc">Sistemas para fazendas, granjas e propriedades rurais. Redução drástica do custo com irrigação, ordenha e processamento.</p>
+      <a href="#simulacao" class="srv-link">Conhecer soluções &#8594;</a>
     </div>
     <div class="srv rev" style="transition-delay:.24s">
       <div class="srv-num">04</div>
       <span class="srv-icon">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" color="#C8980A"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
       </span>
-      <div class="srv-title">Projeto Tecnico</div>
-      <p class="srv-desc">Dimensionamento preciso, documentacao CEMIG e instalacao homologada com total seguranca juridica. ART inclusa no projeto.</p>
+      <div class="srv-title">Projeto Técnico</div>
+      <p class="srv-desc">Dimensionamento preciso, documentação CEMIG e instalação homologada com total segurança jurídica. ART inclusa no projeto.</p>
       <a href="#contato" class="srv-link">Solicitar projeto &#8594;</a>
     </div>
     <div class="srv rev" style="transition-delay:.32s">
@@ -874,8 +881,8 @@
       <span class="srv-icon">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" color="#C8980A"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
       </span>
-      <div class="srv-title">Manutencao e Suporte</div>
-      <p class="srv-desc">Limpeza, revisao eletrica e correcao de falhas. Planos de manutencao preventiva para manter a maxima performance do sistema.</p>
+      <div class="srv-title">Manutenção e Suporte</div>
+      <p class="srv-desc">Limpeza, revisão elétrica e correção de falhas. Planos de manutenção preventiva para manter a máxima performance do sistema.</p>
       <a href="#contato" class="srv-link">Agendar visita &#8594;</a>
     </div>
     <div class="srv rev" style="transition-delay:.4s">
@@ -884,22 +891,22 @@
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" color="#C8980A"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       </span>
       <div class="srv-title">Financiamento Solar</div>
-      <p class="srv-desc">Parcele o investimento em ate 84x e comece a economizar desde o primeiro mes. Trabalhamos com as melhores linhas de credito solar.</p>
-      <a href="#simulacao" class="srv-link">Ver condicoes &#8594;</a>
+      <p class="srv-desc">Parcele o investimento em até 84x e comece a economizar desde o primeiro mês. Trabalhamos com as melhores linhas de crédito solar.</p>
+      <a href="#simulacao" class="srv-link">Ver condições &#8594;</a>
     </div>
   </div>
 </section>
 
-<!-- SIMULACAO -->
+<!-- SIMULAÇÃO -->
 <section id="simulacao">
   <div class="sim-wrap">
     <div class="rev">
-      <div class="sec-eyebrow">Orcamento Gratuito</div>
-      <h2>Descubra quanto voce vai <em>economizar</em></h2>
-      <p class="sec-desc">Preencha os dados e receba uma simulacao personalizada no seu WhatsApp em minutos. Sem compromisso.</p>
+      <div class="sec-eyebrow">Orçamento Gratuito</div>
+      <h2>Descubra quanto você vai <em>economizar</em></h2>
+      <p class="sec-desc">Preencha os dados e receba uma simulação personalizada no seu WhatsApp em minutos. Sem compromisso.</p>
       <div class="form-card" style="margin-top:2.5rem">
-        <div class="form-title">Solicitar Simulacao</div>
-        <p class="form-sub">Atendemos em Jacutinga, Andradas, Pocos de Caldas, Itapeva e regiao.</p>
+        <div class="form-title">Solicitar Simulação</div>
+        <p class="form-sub">Atendemos em Jacutinga, Andradas, Poços de Caldas, Itapeva e região.</p>
         <div class="fld-row">
           <div class="fld"><label>Nome <span class="fld-required">*</span></label><input type="text" id="f-nome" placeholder="Seu nome completo"></div>
           <div class="fld"><label>WhatsApp <span class="fld-required">*</span></label><input type="tel" id="f-tel" placeholder="(37) 9 9999-9999"></div>
@@ -909,24 +916,24 @@
             <option value="">Selecione sua cidade</option>
             <option>Jacutinga</option>
             <option>Andradas</option>
-            <option>Pocos de Caldas</option>
+            <option>Poços de Caldas</option>
             <option>Itapeva</option>
             <option>Bom Jesus do Galho</option>
             <option>Outra cidade</option>
           </select>
         </div>
         <div class="fld-row">
-          <div class="fld"><label>Valor medio da conta <span class="fld-required">*</span></label>
+          <div class="fld"><label>Valor médio da conta <span class="fld-required">*</span></label>
             <select id="f-conta">
               <option value="">Selecione</option>
-              <option value="200">Ate R$ 200</option>
+              <option value="200">Até R$ 200</option>
               <option value="400">R$ 200 a R$ 400</option>
               <option value="700">R$ 400 a R$ 700</option>
               <option value="1200">R$ 700 a R$ 1.200</option>
               <option value="2000">Acima de R$ 1.200</option>
             </select>
           </div>
-          <div class="fld"><label>Tipo de instalacao</label>
+          <div class="fld"><label>Tipo de instalação</label>
             <select id="f-tipo">
               <option value="">Selecione</option>
               <option>Residencial</option>
@@ -936,11 +943,10 @@
             </select>
           </div>
         </div>
-        <div class="fld"><label>Observacoes</label><textarea id="f-obs" placeholder="Informe algo a mais sobre sua necessidade (opcional)"></textarea></div>
-        <!-- LEMBRE DE SUBSTITUIR O NUMERO ABAIXO PELO NUMERO REAL -->
+        <div class="fld"><label>Observações</label><textarea id="f-obs" placeholder="Informe algo a mais sobre sua necessidade (opcional)"></textarea></div>
         <a href="https://wa.me/5537999999999" id="btn-simular" class="btn-wa" target="_blank" rel="noopener">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          Receber Simulacao pelo WhatsApp
+          Receber Simulação pelo WhatsApp
         </a>
       </div>
     </div>
@@ -959,8 +965,8 @@
         </div>
         <div class="chc-footer">
           <div class="chc-foot-item"><div class="chc-foot-n" id="roi-anos">&#8212;</div><div class="chc-foot-l">Retorno investimento</div></div>
-          <div class="chc-foot-item"><div class="chc-foot-n">25+</div><div class="chc-foot-l">Anos de geracao</div></div>
-          <div class="chc-foot-item"><div class="chc-foot-n">0%</div><div class="chc-foot-l">Emissao CO&#8322;</div></div>
+          <div class="chc-foot-item"><div class="chc-foot-n">25+</div><div class="chc-foot-l">Anos de geração</div></div>
+          <div class="chc-foot-item"><div class="chc-foot-n">0%</div><div class="chc-foot-l">Emissão CO&#8322;</div></div>
         </div>
       </div>
       <div class="eco-card">
@@ -973,11 +979,11 @@
       <div class="timeline-card">
         <div class="tc-title">Cronograma do seu projeto</div>
         <div class="timeline">
-          <div class="tl-item done"><div class="tl-dot">&#10003;</div><div class="tl-label">Visita tecnica</div></div>
+          <div class="tl-item done"><div class="tl-dot">&#10003;</div><div class="tl-label">Visita técnica</div></div>
           <div class="tl-item done"><div class="tl-dot">&#10003;</div><div class="tl-label">Projeto</div></div>
-          <div class="tl-item active"><div class="tl-dot">&#8594;</div><div class="tl-label">Instalacao</div></div>
-          <div class="tl-item"><div class="tl-dot">4</div><div class="tl-label">Homologacao</div></div>
-          <div class="tl-item"><div class="tl-dot">5</div><div class="tl-label">Geracao ativa</div></div>
+          <div class="tl-item active"><div class="tl-dot">&#8594;</div><div class="tl-label">Instalação</div></div>
+          <div class="tl-item"><div class="tl-dot">4</div><div class="tl-label">Homologação</div></div>
+          <div class="tl-item"><div class="tl-dot">5</div><div class="tl-label">Geração ativa</div></div>
         </div>
       </div>
     </div>
@@ -988,32 +994,32 @@
 <section id="processo">
   <div class="sec-head rev">
     <div class="sec-eyebrow">Como Funciona</div>
-    <h2>Do orcamento a <em>primeira geracao</em> em ate 45 dias</h2>
+    <h2>Do orçamento à <em>primeira geração</em> em até 45 dias</h2>
     <p class="sec-desc">Um processo transparente, sem surpresas e com acompanhamento em cada etapa.</p>
   </div>
   <div class="proc-grid">
     <div class="proc-step">
       <div class="proc-num">01</div>
-      <div class="proc-title">Visita Tecnica</div>
-      <p class="proc-desc">Nossa equipe visita sua propriedade, avalia o local de instalacao, o telhado e o quadro eletrico. Gratuito e sem compromisso.</p>
+      <div class="proc-title">Visita Técnica</div>
+      <p class="proc-desc">Nossa equipe visita sua propriedade, avalia o local de instalação, o telhado e o quadro elétrico. Gratuito e sem compromisso.</p>
       <div class="proc-days">1&#8211;2 dias</div>
     </div>
     <div class="proc-step" style="transition-delay:.1s">
       <div class="proc-num">02</div>
       <div class="proc-title">Projeto e Proposta</div>
-      <p class="proc-desc">Dimensionamento tecnico completo com ART, memorial descritivo e proposta comercial detalhada com ROI real do seu sistema.</p>
+      <p class="proc-desc">Dimensionamento técnico completo com ART, memorial descritivo e proposta comercial detalhada com ROI real do seu sistema.</p>
       <div class="proc-days">3&#8211;5 dias</div>
     </div>
     <div class="proc-step" style="transition-delay:.2s">
       <div class="proc-num">03</div>
-      <div class="proc-title">Instalacao</div>
-      <p class="proc-desc">Equipe especializada instala os paineis, inversor e string box com seguranca e organizacao. Limpeza total ao final do servico.</p>
+      <div class="proc-title">Instalação</div>
+      <p class="proc-desc">Equipe especializada instala os painéis, inversor e string box com segurança e organização. Limpeza total ao final do serviço.</p>
       <div class="proc-days">1&#8211;3 dias</div>
     </div>
     <div class="proc-step" style="transition-delay:.3s">
       <div class="proc-num">04</div>
-      <div class="proc-title">Homologacao e Geracao</div>
-      <p class="proc-desc">Solicitamos a conexao a CEMIG e acompanhamos o processo ate a aprovacao. Voce recebe o acesso ao monitoramento e comeca a gerar.</p>
+      <div class="proc-title">Homologação e Geração</div>
+      <p class="proc-desc">Solicitamos a conexão à CEMIG e acompanhamos o processo até a aprovação. Você recebe o acesso ao monitoramento e começa a gerar.</p>
       <div class="proc-days">30&#8211;45 dias</div>
     </div>
   </div>
@@ -1023,21 +1029,20 @@
 <section id="projetos">
   <div class="proj-header rev">
     <div>
-      <div class="sec-eyebrow">Portfolio</div>
-      <h2>Projetos <strong>realizados</strong> na regiao</h2>
+      <div class="sec-eyebrow">Portfólio</div>
+      <h2>Projetos <strong>realizados</strong> na região</h2>
     </div>
     <a href="#contato" class="btn-ghost">Ver todos os projetos <span class="arrow">&#8594;</span></a>
   </div>
   <div class="proj-grid">
-    <!-- CORRECTED: img vem antes do overlay em todos os cards -->
     <div class="pj rev">
       <div class="pj-img">
-        <img src="PlacasSolares1.jpg" alt="Instalacao Comercial AMV Solar">
+        <img src="PlacasSolares1.jpg" alt="Instalação Comercial AMV Solar">
         <div class="pj-overlay"></div>
-        <div class="pj-kw"><div class="pj-kw-val">18 kWp</div>Potencia instalada</div>
+        <div class="pj-kw"><div class="pj-kw-val">18 kWp</div>Potência instalada</div>
       </div>
       <div class="pj-body">
-        <h4>Instalacao Comercial &#8212; Telhado Metalico</h4>
+        <h4>Instalação Comercial &#8212; Telhado Metálico</h4>
         <small>Sul de Minas Gerais &#8212; 2024</small>
         <div class="pj-tags">
           <span class="pj-tag">Comercial</span>
@@ -1048,12 +1053,12 @@
     </div>
     <div class="pj rev" style="transition-delay:.08s">
       <div class="pj-img">
-        <img src="PlacasSolares2.jpg" alt="Residencia telhado ceramica AMV Solar">
+        <img src="PlacasSolares2.jpg" alt="Residência telhado cerâmica AMV Solar">
         <div class="pj-overlay"></div>
-        <div class="pj-kw"><div class="pj-kw-val">8,4 kWp</div>Potencia instalada</div>
+        <div class="pj-kw"><div class="pj-kw-val">8,4 kWp</div>Potência instalada</div>
       </div>
       <div class="pj-body">
-        <h4>Residencia &#8212; Telhado Ceramica</h4>
+        <h4>Residência &#8212; Telhado Cerâmica</h4>
         <small>Andradas, MG &#8212; 2024</small>
         <div class="pj-tags">
           <span class="pj-tag">Residencial</span>
@@ -1066,11 +1071,11 @@
       <div class="pj-img">
         <img src="PlacasSolares6.jpg" alt="Propriedade rural AMV Solar">
         <div class="pj-overlay"></div>
-        <div class="pj-kw"><div class="pj-kw-val">5,5 kWp</div>Potencia instalada</div>
+        <div class="pj-kw"><div class="pj-kw-val">5,5 kWp</div>Potência instalada</div>
       </div>
       <div class="pj-body">
         <h4>Propriedade Rural &#8212; Sistema Completo</h4>
-        <small>Regiao Sul de Minas &#8212; 2024</small>
+        <small>Região Sul de Minas &#8212; 2024</small>
         <div class="pj-tags">
           <span class="pj-tag">Rural</span>
           <span class="pj-tag gold">&#8722;93% no custo</span>
@@ -1080,12 +1085,12 @@
     </div>
     <div class="pj rev" style="transition-delay:.24s">
       <div class="pj-img">
-        <img src="PlacasSolares3.jpg" alt="Residencia telhado ceramico AMV Solar">
+        <img src="PlacasSolares3.jpg" alt="Residência telhado cerâmico AMV Solar">
         <div class="pj-overlay"></div>
-        <div class="pj-kw"><div class="pj-kw-val">6,6 kWp</div>Potencia instalada</div>
+        <div class="pj-kw"><div class="pj-kw-val">6,6 kWp</div>Potência instalada</div>
       </div>
       <div class="pj-body">
-        <h4>Residencia &#8212; Telhado Ceramico</h4>
+        <h4>Residência &#8212; Telhado Cerâmico</h4>
         <small>Sul de Minas Gerais &#8212; 2024</small>
         <div class="pj-tags">
           <span class="pj-tag">Residencial</span>
@@ -1098,7 +1103,7 @@
       <div class="pj-img">
         <img src="PlacasSolares4.jpg" alt="Sistema rural inversor Solis AMV Solar">
         <div class="pj-overlay"></div>
-        <div class="pj-kw"><div class="pj-kw-val">10 kWp</div>Potencia instalada</div>
+        <div class="pj-kw"><div class="pj-kw-val">10 kWp</div>Potência instalada</div>
       </div>
       <div class="pj-body">
         <h4>Sistema Rural &#8212; Inversor Solis</h4>
@@ -1114,11 +1119,11 @@
       <div class="pj-img">
         <img src="PlacasSolares5.jpg" alt="Solo mounting propriedade rural AMV Solar">
         <div class="pj-overlay"></div>
-        <div class="pj-kw"><div class="pj-kw-val">14 kWp</div>Potencia instalada</div>
+        <div class="pj-kw"><div class="pj-kw-val">14 kWp</div>Potência instalada</div>
       </div>
       <div class="pj-body">
         <h4>Solo Mounting &#8212; Propriedade Rural</h4>
-        <small>Regiao Sul de Minas &#8212; 2024</small>
+        <small>Região Sul de Minas &#8212; 2024</small>
         <div class="pj-tags">
           <span class="pj-tag">Rural</span>
           <span class="pj-tag gold">&#8722;93% no custo</span>
@@ -1139,8 +1144,8 @@
       </div>
       <div class="gr-number">4,9</div>
       <div class="gr-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <div class="gr-count">Baseado em 140+ avaliacoes</div>
-      <div class="gr-cta"><a href="https://www.instagram.com/amv_solar/" target="_blank" rel="noopener">Ver todas as avaliacoes &#8594;</a></div>
+      <div class="gr-count">Baseado em 140+ avaliações</div>
+      <div class="gr-cta"><a href="https://www.instagram.com/amv_solar/" target="_blank" rel="noopener">Ver todas as avaliações &#8594;</a></div>
     </div>
     <div class="rev" style="transition-delay:.1s">
       <div class="gr-bars">
@@ -1159,17 +1164,17 @@
   <div class="dep-header rev">
     <div>
       <div class="sec-eyebrow">Depoimentos</div>
-      <h2>Quem ja <em>economiza</em> com a AMV Solar</h2>
+      <h2>Quem já <em>economiza</em> com a AMV Solar</h2>
     </div>
     <div class="dep-rating">
       <div class="dep-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <span>4,9 de 5 &#8212; 140+ avaliacoes</span>
+      <span>4,9 de 5 &#8212; 140+ avaliações</span>
     </div>
   </div>
   <div class="test-grid">
     <div class="tc rev">
       <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <p>Minha conta caiu de R$480 para menos de R$28 por mes. A equipe da AMV foi impecavel do comeco ao fim. Recomendo sem hesitar para qualquer pessoa!</p>
+      <p>Minha conta caiu de R$480 para menos de R$28 por mês. A equipe da AMV foi impecável do começo ao fim. Recomendo sem hesitar para qualquer pessoa!</p>
       <div class="tc-auth">
         <div class="tc-av">MF</div>
         <div><div class="tc-name">Marcos Ferreira</div><div class="tc-city">Jacutinga, MG</div></div>
@@ -1178,7 +1183,7 @@
     </div>
     <div class="tc rev" style="transition-delay:.1s">
       <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <p>Instalamos no nosso supermercado e a economia foi absurda &#8212; mais de R$8.000 por mes. O retorno foi mais rapido do que projetamos. Excelente trabalho!</p>
+      <p>Instalamos no nosso supermercado e a economia foi absurda &#8212; mais de R$8.000 por mês. O retorno foi mais rápido do que projetamos. Excelente trabalho!</p>
       <div class="tc-auth">
         <div class="tc-av">CS</div>
         <div><div class="tc-name">Carlos Silva</div><div class="tc-city">Andradas, MG</div></div>
@@ -1187,7 +1192,7 @@
     </div>
     <div class="tc rev" style="transition-delay:.2s">
       <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <p>O diferencial da AMV e o acompanhamento depois da instalacao. Qualquer duvida, eles respondem na hora. Nenhuma empresa de solar que eu vi faz isso. Nota 10!</p>
+      <p>O diferencial da AMV é o acompanhamento depois da instalação. Qualquer dúvida, eles respondem na hora. Nenhuma empresa de solar que eu vi faz isso. Nota 10!</p>
       <div class="tc-auth">
         <div class="tc-av">AP</div>
         <div><div class="tc-name">Ana Paula Costa</div><div class="tc-city">Jacutinga, MG</div></div>
@@ -1196,25 +1201,25 @@
     </div>
     <div class="tc rev" style="transition-delay:.3s">
       <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <p>Instalei na minha fazenda para a irrigacao. Economizo mais de R$3.500 por mes. O projeto tecnico foi muito bem feito e a instalacao terminou no prazo.</p>
+      <p>Instalei na minha fazenda para a irrigação. Economizo mais de R$3.500 por mês. O projeto técnico foi muito bem feito e a instalação terminou no prazo.</p>
       <div class="tc-auth">
         <div class="tc-av">JO</div>
-        <div><div class="tc-name">Joao Oliveira</div><div class="tc-city">Itapeva, MG</div></div>
+        <div><div class="tc-name">João Oliveira</div><div class="tc-city">Itapeva, MG</div></div>
         <div class="tc-economy">&#8722;93%</div>
       </div>
     </div>
     <div class="tc rev" style="transition-delay:.4s">
       <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <p>Fiz o financiamento e comecei a economizar desde o primeiro mes. A parcela do financiamento e menor que o que eu pagava de luz. Melhor decisao que ja tomei.</p>
+      <p>Fiz o financiamento e comecei a economizar desde o primeiro mês. A parcela do financiamento é menor que o que eu pagava de luz. Melhor decisão que já tomei.</p>
       <div class="tc-auth">
         <div class="tc-av">RL</div>
-        <div><div class="tc-name">Rita Lima</div><div class="tc-city">Pocos de Caldas, MG</div></div>
+        <div><div class="tc-name">Rita Lima</div><div class="tc-city">Poços de Caldas, MG</div></div>
         <div class="tc-economy">&#8722;90%</div>
       </div>
     </div>
     <div class="tc rev" style="transition-delay:.5s">
       <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <p>A transparencia em todo o processo foi o que me conquistou. Recebi o projeto detalhado antes de assinar qualquer coisa. Profissionais de verdade!</p>
+      <p>A transparência em todo o processo foi o que me conquistou. Recebi o projeto detalhado antes de assinar qualquer coisa. Profissionais de verdade!</p>
       <div class="tc-auth">
         <div class="tc-av">PM</div>
         <div><div class="tc-name">Pedro Mendes</div><div class="tc-city">Andradas, MG</div></div>
@@ -1224,12 +1229,12 @@
   </div>
 </section>
 
-<!-- LOCALIZACAO -->
+<!-- LOCALIZAÇÃO -->
 <section id="localizacao">
   <div class="sec-head rev">
     <div class="sec-eyebrow">Onde Estamos</div>
     <h2>Atendemos todo o <em>Sul de Minas</em></h2>
-    <p class="sec-desc">Base em Jacutinga com cobertura em toda a regiao. Venha nos visitar ou solicite uma visita tecnica gratuita.</p>
+    <p class="sec-desc">Base em Jacutinga com cobertura em toda a região. Venha nos visitar ou solicite uma visita técnica gratuita.</p>
   </div>
   <div class="loc-grid">
     <div class="rev">
@@ -1239,8 +1244,8 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8980A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
         </div>
         <div>
-          <div class="loc-label">Endereco</div>
-          <div class="loc-val">Jacutinga, MG &#8212; Sul de Minas Gerais<br><span style="font-size:0.82rem;color:var(--muted)">Atendimento em toda a regiao</span></div>
+          <div class="loc-label">Endereço</div>
+          <div class="loc-val">Jacutinga, MG &#8212; Sul de Minas Gerais<br><span style="font-size:0.82rem;color:var(--muted)">Atendimento em toda a região</span></div>
         </div>
       </div>
       <div class="loc-item">
@@ -1249,8 +1254,7 @@
         </div>
         <div>
           <div class="loc-label">WhatsApp / Telefone</div>
-          <!-- SUBSTITUA PELO NUMERO REAL -->
-          <div class="loc-val"><a href="https://wa.me/5537999999999">(37) 9 9999-9999</a></div>
+          <div class="loc-val"><a href="https://wa.me/5535999151617">(35) 99915-1617</a></div>
         </div>
       </div>
       <div class="loc-item">
@@ -1259,7 +1263,7 @@
         </div>
         <div>
           <div class="loc-label">E-mail</div>
-          <div class="loc-val"><a href="mailto:contato@amvsolar.com.br">contato@amvsolar.com.br</a></div>
+          <div class="loc-val"><a href="mailto:vendas.amv.solar@gmail.com">vendas.amv.solar@gmail.com</a></div>
         </div>
       </div>
       <div class="loc-item">
@@ -1276,8 +1280,8 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8980A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
         <div>
-          <div class="loc-label">Horario de Atendimento</div>
-          <div class="loc-val">Seg&#8211;Sex: 8h&#8211;18h &nbsp;|&nbsp; Sab: 8h&#8211;12h</div>
+          <div class="loc-label">Horário de Atendimento</div>
+          <div class="loc-val">Seg&#8211;Sex: 8h&#8211;18h &nbsp;|&nbsp; Sáb: 8h&#8211;12h</div>
         </div>
       </div>
       <div style="margin-top:1.8rem">
@@ -1285,21 +1289,20 @@
         <div class="coverage-pills">
           <span class="coverage-pill">Jacutinga</span>
           <span class="coverage-pill">Andradas</span>
-          <span class="coverage-pill">Pocos de Caldas</span>
+          <span class="coverage-pill">Poços de Caldas</span>
           <span class="coverage-pill">Itapeva</span>
           <span class="coverage-pill">Ouro Fino</span>
           <span class="coverage-pill">Bom Jesus do Galho</span>
-          <span class="coverage-pill">Monte Siao</span>
-          <span class="coverage-pill">Regiao Sul de Minas</span>
+          <span class="coverage-pill">Monte Sião</span>
+          <span class="coverage-pill">Região Sul de Minas</span>
         </div>
       </div>
     </div>
-    <!-- CORRECTED: mapa com embed correto de Jacutinga MG -->
     <div class="loc-map rev" style="transition-delay:.1s">
       <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d58929.12345678!2d-46.6189!3d-22.2853!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94c8a0e0e0e0e0e0%3A0x0!2sJacutinga%2C+MG%2C+Brasil!5e0!3m2!1spt-BR!2sbr!4v1680000000000"
               allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-              title="Localizacao AMV Solar Jacutinga MG">
+              title="Localização AMV Solar Jacutinga MG">
       </iframe>
     </div>
   </div>
@@ -1309,36 +1312,35 @@
 <section id="faq">
   <div class="faq-wrap">
     <div class="rev">
-      <div class="sec-eyebrow">Duvidas Frequentes</div>
+      <div class="sec-eyebrow">Dúvidas Frequentes</div>
       <h2>Perguntas <em>respondidas</em></h2>
-      <p class="sec-desc">Nao encontrou o que procura? Entre em contato pelo WhatsApp e nossa equipe responde em minutos.</p>
-      <!-- SUBSTITUA O NUMERO PELO REAL -->
-      <a href="https://wa.me/5537999999999" class="btn-primary" style="margin-top:2rem;display:inline-flex" target="_blank">Falar pelo WhatsApp &#8594;</a>
+      <p class="sec-desc">Não encontrou o que procura? Entre em contato pelo WhatsApp e nossa equipe responde em minutos.</p>
+      <a href="https://wa.me/5535999151617" class="btn-primary" style="margin-top:2rem;display:inline-flex" target="_blank">Falar pelo WhatsApp &#8594;</a>
     </div>
     <div class="faq-list rev" style="transition-delay:.1s">
       <div class="faq-item">
-        <button class="faq-q">Quanto tempo demora a instalacao? <div class="faq-icon">+</div></button>
-        <div class="faq-a">A instalacao em si leva de 1 a 3 dias uteis, dependendo do tamanho do sistema. Todo o processo, incluindo aprovacao da CEMIG e homologacao, leva em media 30 a 45 dias. Voce acompanha cada etapa pelo nosso canal de comunicacao.</div>
+        <button class="faq-q">Quanto tempo demora a instalação? <div class="faq-icon">+</div></button>
+        <div class="faq-a">A instalação em si leva de 1 a 3 dias úteis, dependendo do tamanho do sistema. Todo o processo, incluindo aprovação da CEMIG e homologação, leva em média 30 a 45 dias. Você acompanha cada etapa pelo nosso canal de comunicação.</div>
       </div>
       <div class="faq-item">
         <button class="faq-q">O sistema funciona em dias nublados? <div class="faq-icon">+</div></button>
-        <div class="faq-a">Sim. Os paineis fotovoltaicos geram energia mesmo em dias nublados, pois funcionam com luz difusa e nao apenas luz solar direta. A geracao e reduzida em relacao a dias ensolarados, mas o sistema continua funcionando e alimentando sua residencia ou empresa.</div>
+        <div class="faq-a">Sim. Os painéis fotovoltaicos geram energia mesmo em dias nublados, pois funcionam com luz difusa e não apenas luz solar direta. A geração é reduzida em relação a dias ensolarados, mas o sistema continua funcionando e alimentando sua residência ou empresa.</div>
       </div>
       <div class="faq-item">
         <button class="faq-q">Qual o retorno financeiro do investimento? <div class="faq-icon">+</div></button>
-        <div class="faq-a">O retorno medio dos nossos sistemas e entre 3 e 6 anos, dependendo do consumo e do tamanho do sistema. Apos esse periodo, voce gera energia praticamente de graca por mais 20 anos. A valorizacao do imovel tambem e um beneficio adicional documentado.</div>
+        <div class="faq-a">O retorno médio dos nossos sistemas é entre 3 e 6 anos, dependendo do consumo e do tamanho do sistema. Após esse período, você gera energia praticamente de graça por mais 20 anos. A valorização do imóvel também é um benefício adicional documentado.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-q">Qual e a garantia do sistema? <div class="faq-icon">+</div></button>
-        <div class="faq-a">Oferecemos 5 anos de garantia na instalacao e mao de obra. Os paineis solares tem garantia de desempenho de 25 anos (minimo de 80% da potencia nominal). Os inversores tem garantia entre 5 e 10 anos conforme o fabricante.</div>
+        <button class="faq-q">Qual é a garantia do sistema? <div class="faq-icon">+</div></button>
+        <div class="faq-a">Oferecemos 5 anos de garantia na instalação e mão de obra. Os painéis solares têm garantia de desempenho de 25 anos (mínimo de 80% da potência nominal). Os inversores têm garantia entre 5 e 10 anos conforme o fabricante.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-q">O telhado precisa ser de algum material especifico? <div class="faq-icon">+</div></button>
-        <div class="faq-a">Trabalhamos com os mais variados tipos de telhado: ceramica, metalico, fibrocimento, laje e solo (solo-mounting). Durante a visita tecnica, avaliamos as condicoes estruturais e a melhor configuracao para cada caso. Nao e necessario trocar seu telhado.</div>
+        <button class="faq-q">O telhado precisa ser de algum material específico? <div class="faq-icon">+</div></button>
+        <div class="faq-a">Trabalhamos com os mais variados tipos de telhado: cerâmica, metálico, fibrocimento, laje e solo (solo-mounting). Durante a visita técnica, avaliamos as condições estruturais e a melhor configuração para cada caso. Não é necessário trocar seu telhado.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-q">Preciso de alguma licenca ou autorizacao especial? <div class="faq-icon">+</div></button>
-        <div class="faq-a">A conexao do sistema fotovoltaico a rede eletrica requer aprovacao da CEMIG. Toda a documentacao tecnica, incluindo ART de engenheiro e memorial descritivo, e preparada e protocolada por nossa equipe, sem custo adicional. Voce nao precisa se preocupar com burocracia.</div>
+        <button class="faq-q">Preciso de alguma licença ou autorização especial? <div class="faq-icon">+</div></button>
+        <div class="faq-a">A conexão do sistema fotovoltaico à rede elétrica requer aprovação da CEMIG. Toda a documentação técnica, incluindo ART de engenheiro e memorial descritivo, é preparada e protocolada por nossa equipe, sem custo adicional. Você não precisa se preocupar com burocracia.</div>
       </div>
     </div>
   </div>
@@ -1349,18 +1351,17 @@
   <div class="cta-wrap rev">
     <div class="cta-eyebrow">Comece Hoje</div>
     <h2>Pronto para <em>economizar</em> de verdade?</h2>
-    <p class="cta-sub">Fale com nossa equipe agora e receba um orcamento completo e personalizado. Atendimento em toda a regiao do Sul de Minas.</p>
+    <p class="cta-sub">Fale com nossa equipe agora e receba um orçamento completo e personalizado. Atendimento em toda a região do Sul de Minas.</p>
     <div class="cta-cards">
-      <!-- SUBSTITUA O NUMERO PELO REAL -->
-      <a href="https://wa.me/553599915-1617" class="cc" target="_blank">
+      <a href="https://wa.me/5535999151617" class="cc" target="_blank">
         <div class="cc-label">WhatsApp</div>
-        <h4>(35)99915-1617</h4>
+        <h4>(35) 99915-1617</h4>
         <p>Resposta em minutos, todos os dias</p>
       </a>
-      <a href="mailto:contato@amvsolar.com.br" class="cc">
+      <a href="mailto:vendas.amv.solar@gmail.com" class="cc">
         <div class="cc-label">E-mail</div>
-        <h4>contato@amvsolar.com.br</h4>
-        <p>Resposta em ate 24 horas </p>
+        <h4>vendas.amv.solar@gmail.com</h4>
+        <p>Resposta em até 24 horas</p>
       </a>
       <a href="https://www.instagram.com/amv_solar/" class="cc" target="_blank" rel="noopener">
         <div class="cc-label">Instagram</div>
@@ -1384,38 +1385,38 @@
         <text x="108" y="42" font-family="Cormorant Garamond, serif" font-size="40" font-style="italic" font-weight="300" fill="#C8980A">Solar</text>
         <line x1="4" y1="48" x2="216" y2="48" stroke="#C8980A" stroke-width="0.7" opacity="0.3"/>
       </svg>
-      <p>Engenharia eletrica especializada em sistemas fotovoltaicos residenciais, comerciais e rurais no Sul de Minas Gerais.</p>
+      <p>Engenharia elétrica especializada em sistemas fotovoltaicos residenciais, comerciais e rurais no Sul de Minas Gerais.</p>
       <div class="footer-social" style="margin-top:1.4rem">
         <a href="https://www.instagram.com/amv_solar/" class="social-btn" target="_blank" rel="noopener" title="Instagram AMV Solar">ig</a>
         <a href="https://wa.me/5535999151617" class="social-btn" target="_blank" rel="noopener" title="WhatsApp AMV Solar">wa</a>
-        <a href="mailto:@vendas.amv.solar@gmail.com" class="social-btn" title="E-mail AMV Solar">em</a>
+        <a href="mailto:vendas.amv.solar@gmail.com" class="social-btn" title="E-mail AMV Solar">em</a>
       </div>
     </div>
     <div class="footer-col">
       <h5>Empresa</h5>
       <a href="#sobre">Quem somos</a>
-      <a href="#servicos">Servicos</a>
-      <a href="#projetos">Portfolio</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#projetos">Portfólio</a>
       <a href="#processo">Como funciona</a>
     </div>
     <div class="footer-col">
-      <h5>Servicos</h5>
+      <h5>Serviços</h5>
       <a href="#servicos">Residencial</a>
       <a href="#servicos">Comercial</a>
       <a href="#servicos">Rural</a>
-      <a href="#servicos">Manutencao</a>
+      <a href="#servicos">Manutenção</a>
     </div>
     <div class="footer-col">
       <h5>Contato</h5>
-      <a href="https://wa.me/553599915-1617">(35) 99915-1617</a>
-      <a href="mailto:vendas.amv.solar@gmail.com">contato@amvsolar.com.br</a>
+      <a href="https://wa.me/5535999151617">(35) 99915-1617</a>
+      <a href="mailto:vendas.amv.solar@gmail.com">vendas.amv.solar@gmail.com</a>
       <a href="https://www.instagram.com/amv_solar/" target="_blank">@amv_solar</a>
       <a href="#localizacao">Jacutinga, MG</a>
       <a href="#faq">Perguntas frequentes</a>
     </div>
   </div>
   <div class="footer-bottom">
-    <p>&#169; 2025 AMV Solar &#8212; Engenharia Eletrica. Todos os direitos reservados.</p>
+    <p>&#169; 2025 AMV Solar &#8212; Engenharia Elétrica. Todos os direitos reservados.</p>
     <svg class="footer-logo-sm" viewBox="0 0 160 42" xmlns="http://www.w3.org/2000/svg">
       <text x="2" y="32" font-family="Cormorant Garamond, serif" font-size="30" font-weight="300" fill="rgba(255,255,255,0.6)">AMV</text>
       <text x="78" y="32" font-family="Cormorant Garamond, serif" font-size="30" font-style="italic" font-weight="300" fill="#C8980A" opacity="0.7">Solar</text>
@@ -1432,7 +1433,6 @@
       document.getElementById('hero-left').classList.add('show');
       document.getElementById('hero-right').classList.add('show');
       setTimeout(() => document.getElementById('hero-stats').classList.add('show'), 500);
-      // CORRECTED: c3 nao usa counter animado pois tem decimal
       setTimeout(() => animateCounters(), 600);
     }, 2200);
   });
@@ -1466,7 +1466,7 @@
   revEls.forEach(el => io.observe(el));
   procSteps.forEach(el => io.observe(el));
 
-  // CORRECTED: counters — c1 e c2 animam, c3 fica estatico em "2.8"
+  // COUNTERS
   function animateCounter(id, target, duration) {
     const el = document.getElementById(id);
     if (!el) return;
@@ -1482,7 +1482,6 @@
   function animateCounters() {
     animateCounter('c1', 320, 1800);
     animateCounter('c2', 98, 1800);
-    // c3 ja tem "2.8" fixo no HTML, nao precisa animar
   }
 
   // BARS
@@ -1515,7 +1514,7 @@
     document.getElementById('roi-anos').textContent = roi + ' anos';
   }
 
-  // WHATSAPP DINAMICO — SUBSTITUA O NUMERO PELO REAL
+  // WHATSAPP DINÂMICO
   document.getElementById('btn-simular')?.addEventListener('click', function(e) {
     const nome = document.getElementById('f-nome')?.value || '';
     const tel = document.getElementById('f-tel')?.value || '';
@@ -1523,8 +1522,8 @@
     const tipo = document.getElementById('f-tipo')?.options[document.getElementById('f-tipo')?.selectedIndex]?.text || '';
     const cidade = document.getElementById('f-cidade')?.options[document.getElementById('f-cidade')?.selectedIndex]?.text || '';
     if(!nome || !tel) { e.preventDefault(); alert('Por favor, preencha ao menos seu nome e WhatsApp.'); return; }
-    const msg = encodeURIComponent('Ola! Me chamo *' + nome + '* e gostaria de uma simulacao solar.\n\nCidade: ' + cidade + '\nConta de luz: ' + conta + '\nTipo: ' + tipo + '\nContato: ' + tel);
-    this.href = 'https://wa.me/5537999999999?text=' + msg;
+    const msg = encodeURIComponent('Olá! Me chamo *' + nome + '* e gostaria de uma simulação solar.\n\nCidade: ' + cidade + '\nConta de luz: ' + conta + '\nTipo: ' + tipo + '\nContato: ' + tel);
+    this.href = 'https://wa.me/5535999151617?text=' + msg;
   });
 
   // FAQ ACCORDION
